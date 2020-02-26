@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">loginpart</string>
+    <string name="application">GAME AND TRAVEL</string>
+    <string name="app_description">Have fun while you are learning the history!</string>
+    <string name="register_description">Create a New Account</string>
+    <string name="name_hint">Full Name</string>
+    <string name="email_hint">Email Address</string>
+    <string name="pw_hint">Password</string>
+    <string name="pw2_hint">Re-Enter Password</string>
+    <string name="register_btn">Register</string>
+    <string name="login_btn">Login</string>
+    <string name="spinner_job_hint">Your Job</string>
+    <string name="spinner_age_hint">Your Age</string>
+    <string name="already_registered">Are you already registered? Login here.</string>
+    <string name="new_member_text">Are you new here? Register here.</string>
+    <string name="btnLogout">LOGOUT</string>
+    <string name="mainHeader">Your Profile</string>
+    <string name="yourName">Your Name</string>
+    <string name="yourEmail_address">Your Email</string>
+    <string name="yourJob">Your Job</string>
+    <string name="yourAge">Your Age</string>
+    <string name="mailVerify">Email Not Verified !</string>
+    <string name="btnVerify">Verify Now</string>
+    <string name="forgotPassword">Forgot your password? Click here.</string>
+
+    <string-array name="jobs">
+        <item>Select Your Job</item>
+        <item>Student</item>
+        <item>Teacher</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="ages">
+        <item>Select Your Age</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+    </string-array>
+</resources>
