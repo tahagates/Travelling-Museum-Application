@@ -66,6 +66,8 @@ public class Login extends AppCompatActivity {
                     return;
                 }
 
+                //DENEME YORUM
+                //DENEME 2 YORUM
                 progressBar.setVisibility(View.VISIBLE);
 
                 //authenticate the user
