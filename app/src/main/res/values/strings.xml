@@ -22,6 +22,12 @@
     <string name="mailVerify">Email Not Verified !</string>
     <string name="btnVerify">Verify Now</string>
     <string name="forgotPassword">Forgot your password? Click here.</string>
+    <string name="changeEmail">Change your email address</string>
+    <string name="changePassword">Change your password</string>
+    <string name="appLogo"></string>
+    <string name="enterYourEmail">Please enter your email address</string>
+    <string name="sendPass">Send my password</string>
+
 
     <string-array name="jobs">
         <item>Select Your Job</item>

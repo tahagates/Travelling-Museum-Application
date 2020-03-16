@@ -37,7 +37,7 @@ public class ProfileFragment extends Fragment {
     TextView fName,email,job,age,verifyMsg;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
-    Button btnVerify;
+    Button btnVerify, changePassword;
     String userID;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,6 +57,7 @@ public class ProfileFragment extends Fragment {
 
         btnVerify = view.findViewById(R.id.btnVerify);
         verifyMsg = view.findViewById(R.id.txtVerifyMail);
+        changePassword = view.findViewById(R.id.ch_password);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -72,6 +73,13 @@ public class ProfileFragment extends Fragment {
                 email.setText(documentSnapshot.getString("email"));
                 job.setText(documentSnapshot.getString("job"));
                 age.setText(documentSnapshot.getString("age"));
+            }
+        });
+
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(),ChangePassword.class));
             }
         });
     }
