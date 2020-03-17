@@ -44,7 +44,7 @@ public class Login extends AppCompatActivity {
         loginBtn = findViewById(R.id.btnLogin);
         txtNewMember = findViewById(R.id.txtNewMember);
         forgotPW = findViewById(R.id.txtForgotPW);
-        builder = new AlertDialog.Builder(this);
+        builder = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,40 +105,39 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
 
                 final EditText resetMail = new EditText(v.getContext());
+                final AlertDialog.Builder passResetDialog = new AlertDialog.Builder(v.getContext());
+                passResetDialog.setTitle("Reset your password");
+                passResetDialog.setMessage("Enter your email in order to reset your password");
+                passResetDialog.setView(resetMail);
 
-                //builder.setMessage("Enter your email").setTitle("Reset your password");
-
-                builder.setMessage("Enter your mail in order to reset your password")
-                        .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                passResetDialog.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String mail = resetMail.getText().toString();
+                        firebaseAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String mail = resetMail.getText().toString();
-                                firebaseAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getApplicationContext(),"Reset link sent to your email.", Toast.LENGTH_SHORT);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getApplicationContext(),"Error : "+ e.getMessage(), Toast.LENGTH_SHORT);
-                                    }
-                                });
-                                finish();
-                                Toast.makeText(getApplicationContext(),"Clicked yes", Toast.LENGTH_SHORT);
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(Login.this, "Reset link sent your email address", Toast.LENGTH_SHORT);
+
                             }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        }).addOnFailureListener(new OnFailureListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                                Toast.makeText(getApplicationContext(),"Clicked no",Toast.LENGTH_SHORT);
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(Login.this, "Error ! Can not sent the link " + e.getMessage(), Toast.LENGTH_SHORT);
                             }
                         });
-                AlertDialog alert = builder.create();
-                alert.setTitle("Reset your  password");
-                alert.show();
+                    }
+                });
+
+                passResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                             //Close dialog
+                    }
+                });
+
+                passResetDialog.create().show();
+
 
             }
         });

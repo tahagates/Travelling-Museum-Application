@@ -1,5 +1,6 @@
 package com.example.loginpart.ui.profile;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,15 +39,17 @@ import javax.annotation.Nullable;
 
 public class ProfileFragment extends Fragment {
 
+    private Context context;
     TextView fName,email,job,age,verifyMsg;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
     Button btnVerify, changePassword;
     String userID;
+    AlertDialog.Builder builder;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
+        this.context = getContext();
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -65,6 +68,7 @@ public class ProfileFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
 
         userID = firebaseAuth.getCurrentUser().getUid();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -84,6 +88,39 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                final EditText resetMail = new EditText(context);
+                final AlertDialog.Builder passResetDialog = new AlertDialog.Builder(context);
+                passResetDialog.setTitle("Recover your password");
+                passResetDialog.setMessage("Enter your mail for recover link");
+                passResetDialog.setView(resetMail);
+
+                passResetDialog.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String mail = resetMail.getText().toString();
+                        firebaseAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                                Toast.makeText(context, "Reset link sent your email address", Toast.LENGTH_SHORT);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(context, "Error ! Can not sent the link " + e.getMessage(), Toast.LENGTH_SHORT);
+                            }
+                        });
+                    }
+                });
+
+                passResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Close
+                    }
+                });
+
+                passResetDialog.create().show();
             }
         });
     }
