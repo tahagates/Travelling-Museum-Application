@@ -29,6 +29,7 @@ public class Login extends AppCompatActivity {
     TextView txtNewMember,forgotPW;
     ProgressBar progressBar;
     FirebaseAuth firebaseAuth;
+    AlertDialog.Builder builder;
 
 
     @Override
@@ -43,6 +44,7 @@ public class Login extends AppCompatActivity {
         loginBtn = findViewById(R.id.btnLogin);
         txtNewMember = findViewById(R.id.txtNewMember);
         forgotPW = findViewById(R.id.txtForgotPW);
+        builder = new AlertDialog.Builder(this);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,49 +98,47 @@ public class Login extends AppCompatActivity {
             }
         });
 
+
+
         forgotPW.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 final EditText resetMail = new EditText(v.getContext());
-                final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
-                passwordResetDialog.setTitle("Reset Your Password");
-                passwordResetDialog.setMessage("Enter your email to reset your password.");
-                passwordResetDialog.setView(resetMail);
 
-                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                //builder.setMessage("Enter your email").setTitle("Reset your password");
 
-                        //Extract email and send reset link
-                        String mail = resetMail.getText().toString();
-                        firebaseAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                builder.setMessage("Enter your mail in order to reset your password")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(Login.this,"Reset link sent to your email.", Toast.LENGTH_SHORT);
-                                //TODO : Make a new activity in order to reset password!
+                            public void onClick(DialogInterface dialog, int which) {
+                                String mail = resetMail.getText().toString();
+                                firebaseAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(),"Reset link sent to your email.", Toast.LENGTH_SHORT);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(),"Error : "+ e.getMessage(), Toast.LENGTH_SHORT);
+                                    }
+                                });
+                                finish();
+                                Toast.makeText(getApplicationContext(),"Clicked yes", Toast.LENGTH_SHORT);
                             }
-                        }).addOnFailureListener(new OnFailureListener() {
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(Login.this,"Error! Reset link is not sent." + e.getMessage(), Toast.LENGTH_SHORT);
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                Toast.makeText(getApplicationContext(),"Clicked no",Toast.LENGTH_SHORT);
                             }
                         });
-
-                    }
-                });
-
-                passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        //Close the dialog
-
-
-                    }
-                });
-
-                passwordResetDialog.create().show();
+                AlertDialog alert = builder.create();
+                alert.setTitle("Reset your  password");
+                alert.show();
 
             }
         });
