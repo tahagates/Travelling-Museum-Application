@@ -142,4 +142,8 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
+    public EditText getPassword(){
+        return password;
+    }
 }

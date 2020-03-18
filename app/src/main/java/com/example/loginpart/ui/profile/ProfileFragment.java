@@ -23,8 +23,12 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.loginpart.Login;
 import com.example.loginpart.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -43,7 +47,7 @@ public class ProfileFragment extends Fragment {
     TextView fName,email,job,age,verifyMsg;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
-    Button btnVerify, changePassword;
+    Button btnVerify, changePassword,changeMail;
     String userID;
     AlertDialog.Builder builder;
 
@@ -65,6 +69,7 @@ public class ProfileFragment extends Fragment {
         btnVerify = view.findViewById(R.id.btnVerify);
         verifyMsg = view.findViewById(R.id.txtVerifyMail);
         changePassword = view.findViewById(R.id.ch_password);
+        changeMail = view.findViewById(R.id.ch_email);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -121,6 +126,46 @@ public class ProfileFragment extends Fragment {
                 });
 
                 passResetDialog.create().show();
+            }
+        });
+
+        changeMail.setOnClickListener(new View.OnClickListener() {
+
+            private static final String TAG = "ProfileFragment";
+
+            @Override
+            public void onClick(View v) {
+                final EditText resetMail = new EditText(context);
+                final AlertDialog.Builder mailResetDialog = new AlertDialog.Builder(context);
+                mailResetDialog.setTitle("Reset your email address");
+                mailResetDialog.setMessage("Enter your new email address");
+                mailResetDialog.setView(resetMail);
+
+
+                mailResetDialog.setPositiveButton("Reset", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newMail = resetMail.getText().toString();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        user.updateEmail(newMail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Toast.makeText(context, "Your email address is changed.", Toast.LENGTH_SHORT);
+                                }
+                            }
+                        });
+                    }
+                });
+                mailResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                mailResetDialog.create().show();
+
             }
         });
     }
