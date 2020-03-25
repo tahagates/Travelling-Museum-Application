@@ -47,7 +47,7 @@ public class ProfileFragment extends Fragment {
     TextView fName,email,job,age,verifyMsg;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
-    Button btnVerify, changePassword,changeMail;
+    Button btnVerify, changePassword,changeMail,btnLogout;
     String userID;
     AlertDialog.Builder builder;
 
@@ -70,6 +70,7 @@ public class ProfileFragment extends Fragment {
         verifyMsg = view.findViewById(R.id.txtVerifyMail);
         changePassword = view.findViewById(R.id.ch_password);
         changeMail = view.findViewById(R.id.ch_email);
+        btnLogout = view.findViewById(R.id.btnLogoutProfile);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -86,6 +87,15 @@ public class ProfileFragment extends Fragment {
                 email.setText(documentSnapshot.getString("email"));
                 job.setText(documentSnapshot.getString("job"));
                 age.setText(documentSnapshot.getString("age"));
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent i = new Intent(context, Login.class);
+                //getActivity().finish();
             }
         });
 

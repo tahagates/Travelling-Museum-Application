@@ -27,6 +27,7 @@
     <string name="appLogo"></string>
     <string name="enterYourEmail">Please enter your email address</string>
     <string name="sendPass">Reset my password</string>
+    <string name="logOutProfile">LOGOUT</string>
 
 
     <string-array name="jobs">
