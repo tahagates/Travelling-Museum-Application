@@ -98,11 +98,11 @@ public class Register extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        //User already logged in
+        /*//User already logged in
         if(firebaseAuth.getCurrentUser() != null){
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
             finish();
-        }
+        }*/
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,7 +197,7 @@ public class Register extends AppCompatActivity {
                                 }
                             });
 
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(),Login.class));
                         }else{
                             Toast.makeText(Register.this,"Registration Error !" + task.getException().getMessage(), Toast.LENGTH_SHORT);
                             progressBar.setVisibility(View.GONE);
