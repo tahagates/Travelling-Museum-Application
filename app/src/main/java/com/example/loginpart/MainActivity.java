@@ -34,14 +34,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_home);
 
         fName = findViewById(R.id.txtMainName);
         email = findViewById(R.id.txtMainMail);
         job = findViewById(R.id.txtMainJob);
         age = findViewById(R.id.txtMainAge);
 
-        btnVerify = findViewById(R.id.btnVerify);
+        //btnVerify = findViewById(R.id.btnVerify);
         verifyMsg = findViewById(R.id.txtVerifyMail);
 
         firebaseAuth = FirebaseAuth.getInstance();

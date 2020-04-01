@@ -66,7 +66,7 @@ public class ProfileFragment extends Fragment {
         job = view.findViewById(R.id.txtMainJob);
         age = view.findViewById(R.id.txtMainAge);
 
-        btnVerify = view.findViewById(R.id.btnVerify);
+        //btnVerify = view.findViewById(R.id.btnVerify);
         verifyMsg = view.findViewById(R.id.txtVerifyMail);
         changePassword = view.findViewById(R.id.ch_password);
         changeMail = view.findViewById(R.id.ch_email);
