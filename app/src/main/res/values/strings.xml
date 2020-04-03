@@ -24,7 +24,7 @@
     <string name="forgotPassword">Forgot your password? Click here.</string>
     <string name="changeEmail">Change your email address</string>
     <string name="changePassword">Change your password</string>
-    <string name="appLogo"></string>
+    <string name="appLogo"/>
     <string name="enterYourEmail">Please enter your email address</string>
     <string name="sendPass">Reset my password</string>
     <string name="logOutProfile">LOGOUT</string>
