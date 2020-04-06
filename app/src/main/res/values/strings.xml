@@ -28,6 +28,19 @@
     <string name="enterYourEmail">Please enter your email address</string>
     <string name="sendPass">Reset my password</string>
     <string name="logOutProfile">LOGOUT</string>
+    <string name="floorPlan"/>
+    <string name="collection1">C1</string>
+    <string name="collection2">C2</string>
+    <string name="collection3">C3</string>
+    <string name="collection4">C4</string>
+    <string name="collection5">C5</string>
+    <string name="collection6">C6</string>
+    <string name="collection7">C7</string>
+    <string name="collection8">C8</string>
+    <string name="collection9">C9</string>
+    <string name="collection11">C11</string>
+    <string name="collection12">C12</string>
+    <string name="playerButton">P</string>
 
 
     <string-array name="jobs">
