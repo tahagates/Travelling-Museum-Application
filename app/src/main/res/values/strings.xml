@@ -41,6 +41,8 @@
     <string name="collection11">C11</string>
     <string name="collection12">C12</string>
     <string name="playerButton">P</string>
+    <string name="artifactButton">MOVE!</string>
+    <string name="blankText"/>
 
 
     <string-array name="jobs">

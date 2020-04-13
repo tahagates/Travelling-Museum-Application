@@ -48,6 +48,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
     Button btnVerify, changePassword,changeMail,btnLogout;
+
     String userID;
     AlertDialog.Builder builder;
 
@@ -58,7 +59,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
 
         fName = view.findViewById(R.id.txtMainName);
@@ -76,8 +77,13 @@ public class ProfileFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         builder = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
 
+
+
         userID = firebaseAuth.getCurrentUser().getUid();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
+
+
+
 
         DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
         documentReference.addSnapshotListener( new EventListener<DocumentSnapshot>() {

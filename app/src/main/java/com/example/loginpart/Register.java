@@ -166,7 +166,7 @@ public class Register extends AppCompatActivity {
 
                             // Send verification link
 
-                            FirebaseUser fuser = firebaseAuth.getCurrentUser();
+                            /*FirebaseUser fuser = firebaseAuth.getCurrentUser();
                             fuser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -177,10 +177,10 @@ public class Register extends AppCompatActivity {
                                 public void onFailure(@NonNull Exception e) {
                                     Log.d(TAG,"onFailure: Email not sent " + e.getMessage());
                                 }
-                            });
+                            });*/
 
 
-                            Toast.makeText(Register.this,"Successfully registered",Toast.LENGTH_SHORT).show();
+
 
                             userID = firebaseAuth.getCurrentUser().getUid();
                             DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
@@ -196,7 +196,7 @@ public class Register extends AppCompatActivity {
                                     Log.d(TAG, "onSuccess: user profile is created for " + userID);
                                 }
                             });
-
+                            Toast.makeText(Register.this,"Successfully registered",Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(),Login.class));
                         }else{
                             Toast.makeText(Register.this,"Registration Error !" + task.getException().getMessage(), Toast.LENGTH_SHORT);
