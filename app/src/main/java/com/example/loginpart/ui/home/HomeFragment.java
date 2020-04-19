@@ -26,10 +26,15 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
+
+import java.util.Collection;
 
 import javax.annotation.Nullable;
 
@@ -43,6 +48,8 @@ public class HomeFragment extends Fragment {
     Button btnMove,btnReset;
 
     private String artifactInput;
+
+
 
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
@@ -66,12 +73,38 @@ public class HomeFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        databaseReference.child("mapLocations").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                for(DataSnapshot child : children){
+                    child.getValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
 
         playerButton = view.findViewById(R.id.btnPlayer);
 
         artifact1 = view.findViewById(R.id.btnCollection1);
         artifact2 = view.findViewById(R.id.btnCollection2);
+        artifact3 = view.findViewById(R.id.btnCollection3);
+        artifact4 = view.findViewById(R.id.btnCollection4);
+        artifact5 = view.findViewById(R.id.btnCollection5);
+        artifact6 = view.findViewById(R.id.btnCollection6);
+        artifact7 = view.findViewById(R.id.btnCollection7);
+        artifact8 = view.findViewById(R.id.btnCollection8);
+        artifact9 = view.findViewById(R.id.btnCollection9);
+        artifact11 = view.findViewById(R.id.btnCollection11);
+        artifact12 = view.findViewById(R.id.btnCollection12);
 
         btnMove = view.findViewById(R.id.btnArtifact);
         btnReset = view.findViewById(R.id.btnReset);
@@ -85,10 +118,110 @@ public class HomeFragment extends Fragment {
                 Point p = getPointOfView(artifact1);
                 Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
 
-                playerButton.setX(p.x);
-                playerButton.setY(p.y + 1);
             }
         });
+
+        artifact2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact2);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+        artifact3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact3);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+        artifact4.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact4);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+        artifact5.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact5);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+        artifact6.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact6);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+        artifact7.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact7);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+        artifact8.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact8);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+        artifact9.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact9);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+        artifact11.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact11);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+        artifact12.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Point p = getPointOfView(artifact12);
+                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+
+            }
+        });
+
+
 
         playerButton.setOnClickListener(new View.OnClickListener() {
 
@@ -102,11 +235,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        //                Point p = getPointOfView(artifact1);
-////                //Point player = getPointOfView(btnMove);
-////                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-////                playerButton.setX(p.x+10);
-////                playerButton.setY(p.y-170);
+
 
         btnMove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +251,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String inputString = inputArtifact.getText().toString();
-                        Log.d("Artifact ID: ", inputString);
+                        //Log.d("Artifact ID: ", inputString);
                     }
                 });
 
