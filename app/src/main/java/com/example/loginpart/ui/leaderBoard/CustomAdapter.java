@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.example.loginpart.R;
 import com.example.loginpart.model.UserModel;
 
@@ -23,6 +25,8 @@ public class CustomAdapter extends BaseAdapter {
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.userList = userList;
     }
+
+
 
     @Override
     public int getCount() {

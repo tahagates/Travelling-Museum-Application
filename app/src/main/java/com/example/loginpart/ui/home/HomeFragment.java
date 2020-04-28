@@ -19,7 +19,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.loginpart.R;
-import com.example.loginpart.model.ArtifactModel;
+import com.example.loginpart.model.*;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,10 +30,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import static com.example.loginpart.ui.leaderBoard.LeaderBoardFragment.TAG;
+//import static com.example.loginpart.ui.leaderBoard.LeaderBoardFragment.TAG;
 import static java.lang.Integer.parseInt;
 
 public class HomeFragment extends Fragment {
@@ -46,7 +52,7 @@ public class HomeFragment extends Fragment {
     Button btnMove,btnReset;
     Button btnDeneme;
 
-    private ProgressBar progressBar;
+    ProgressBar progressBar;
 
     private String artifactInput;
 
@@ -91,10 +97,6 @@ public class HomeFragment extends Fragment {
         btnMove = view.findViewById(R.id.btnArtifact);
         btnReset = view.findViewById(R.id.btnReset);
 
-       //ezginin eklediği kısımlar--------------
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar_home);
-        progressBar.setMax(50);
-        //-------------------
 
         playerButton.setOnClickListener(new View.OnClickListener() {
 
@@ -105,10 +107,7 @@ public class HomeFragment extends Fragment {
 
                 Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
 
-                //Bunu buraya ekleyeceğim ama emin değilim yeri değişebilir.
-                int userPoint = getPoint();
-                progressBar.setProgress(userPoint);
-                //-----------------------
+
             }
         });
 
@@ -118,6 +117,15 @@ public class HomeFragment extends Fragment {
         databaseReference = firebaseDatabase.getReference();
 
         firebaseFirestore = FirebaseFirestore.getInstance();
+
+        //ezginin eklediği kısımlar--------------
+        progressBar = view.findViewById(R.id.progressBar_home);
+        progressBar.setMax(50);
+        //Bunu buraya ekleyeceğim ama emin değilim yeri değişebilir.
+        //int userPoint = getPoint();
+        //progressBar.setProgress(userPoint);
+        //int a = 5;
+        //-----------------------
 
         btnDeneme = view.findViewById(R.id.btnDeneme);
 
@@ -196,54 +204,68 @@ public class HomeFragment extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG,e.toString());
             }
         });
 
     }
 
     private void updatePoint(int artifactPoint) {
-        final int[] userPoint = new int[1];
+        final int[] userPoint = {0};
 
         documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    userPoint[0] = (int) doc.get("point");
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                if(documentSnapshot.exists()){
+                    userPoint[0] = parseInt(documentSnapshot.getString("point"));
+
+                } else{
+                    Log.d("No document","Document error");
+                    //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
                 }
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
 
         documentReference.update("point", userPoint[0] + artifactPoint);
     }
 
-    private int getPoint()
-    {
-        final int[] userPoint = new int[1];
+    private int getPoint() {
 
-        documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        final int[] userPoint = new int[1];
+        String uID;
+        uID = firebaseAuth.getCurrentUser().getUid();
+
+        documentReference = firebaseFirestore.collection("users").document(uID);
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            //@RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    userPoint[0] = (int) doc.get("point");
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    userPoint[0] = parseInt(documentSnapshot.getString("point"));
+                    int a = 0;
+
+                } else{
+                    Log.d("No document","Document error");
+                    //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
                 }
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
 
-        return userPoint[0];
+
+
+        int usPoint = Integer.parseInt(String.valueOf(userPoint[0]));
+
+        return usPoint;
+
     }
 }
