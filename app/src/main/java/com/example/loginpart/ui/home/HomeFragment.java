@@ -45,6 +45,7 @@ public class HomeFragment extends Fragment {
     Button playerButton;
     Button btnMove,btnReset;
     Button btnDeneme;
+
     private ProgressBar progressBar;
 
     private String artifactInput;
