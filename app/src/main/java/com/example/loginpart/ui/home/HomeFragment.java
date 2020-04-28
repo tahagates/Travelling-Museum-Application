@@ -39,7 +39,8 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-//import static com.example.loginpart.ui.leaderBoard.LeaderBoardFragment.TAG;
+import static com.example.loginpart.ui.leaderBoard.LeaderBoardFragment.TAG;
+
 import static java.lang.Integer.parseInt;
 
 public class HomeFragment extends Fragment {
@@ -56,7 +57,7 @@ public class HomeFragment extends Fragment {
 
     private String artifactInput;
 
-    final ArtifactModel artifactItem = null;
+
 
     private FirebaseDatabase firebaseDatabase;
     private FirebaseFirestore firebaseFirestore;
@@ -119,8 +120,8 @@ public class HomeFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         //ezginin eklediği kısımlar--------------
-        progressBar = view.findViewById(R.id.progressBar_home);
-        progressBar.setMax(50);
+        //progressBar = view.findViewById(R.id.progressBar_home);
+        //progressBar.setMax(50);
         //Bunu buraya ekleyeceğim ama emin değilim yeri değişebilir.
         //int userPoint = getPoint();
         //progressBar.setProgress(userPoint);
@@ -185,17 +186,8 @@ public class HomeFragment extends Fragment {
                     if(str.equals("deneme")){
                         btnDeneme.setBackgroundColor(btnDeneme.getContext().getResources().getColor(R.color.Green));
                     }
+
                     Log.d("Document name", str);
-
-
-                    //ezginin eklediği kısımlar--------------------
-                    artifactItem.setName(documentSnapshot.getString("name"));
-                    artifactItem.setCategory(documentSnapshot.getString("category"));
-                    artifactItem.setPoint(parseInt(documentSnapshot.getString("point")));
-
-                    updatePoint(parseInt(documentSnapshot.getString("point")));
-                    //------------------------------
-
                 } else{
                     Log.d("No document","Document error");
                     //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
@@ -204,11 +196,12 @@ public class HomeFragment extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,e.toString());
             }
         });
 
     }
-
+/*
     private void updatePoint(int artifactPoint) {
         final int[] userPoint = {0};
 
@@ -267,5 +260,5 @@ public class HomeFragment extends Fragment {
 
         return usPoint;
 
-    }
+    }*/
 }
