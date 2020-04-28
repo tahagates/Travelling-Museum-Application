@@ -1,9 +1,9 @@
 package com.example.loginpart.ui.home;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,41 +11,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.graphics.Point;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.loginpart.R;
-import com.google.android.gms.maps.MapFragment;
+import com.example.loginpart.model.ArtifactModel;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Text;
-
-import java.util.Collection;
-
 import javax.annotation.Nullable;
 
 import static com.example.loginpart.ui.leaderBoard.LeaderBoardFragment.TAG;
+import static java.lang.Integer.parseInt;
 
 public class HomeFragment extends Fragment {
 
@@ -56,10 +45,11 @@ public class HomeFragment extends Fragment {
     Button playerButton;
     Button btnMove,btnReset;
     Button btnDeneme;
+    private ProgressBar progressBar;
 
     private String artifactInput;
 
-
+    final ArtifactModel artifactItem = null;
 
     private FirebaseDatabase firebaseDatabase;
     private FirebaseFirestore firebaseFirestore;
@@ -100,6 +90,10 @@ public class HomeFragment extends Fragment {
         btnMove = view.findViewById(R.id.btnArtifact);
         btnReset = view.findViewById(R.id.btnReset);
 
+       //ezginin eklediği kısımlar--------------
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar_home);
+        progressBar.setMax(50);
+        //-------------------
 
         playerButton.setOnClickListener(new View.OnClickListener() {
 
@@ -110,6 +104,10 @@ public class HomeFragment extends Fragment {
 
                 Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
 
+                //Bunu buraya ekleyeceğim ama emin değilim yeri değişebilir.
+                int userPoint = getPoint();
+                progressBar.setProgress(userPoint);
+                //-----------------------
             }
         });
 
@@ -138,6 +136,7 @@ public class HomeFragment extends Fragment {
                         String inputString = inputArtifact.getText().toString();
                         Log.d("Artifact ID: ", inputString);
                         movementFunction(inputString);
+
                     }
                 });
 
@@ -147,8 +146,6 @@ public class HomeFragment extends Fragment {
                         //Cancel
                     }
                 });
-
-
 
                 artifactDialog.create().show();
 
@@ -179,8 +176,17 @@ public class HomeFragment extends Fragment {
                     if(str.equals("deneme")){
                         btnDeneme.setBackgroundColor(btnDeneme.getContext().getResources().getColor(R.color.Green));
                     }
-
                     Log.d("Document name", str);
+
+
+                    //ezginin eklediği kısımlar--------------------
+                    artifactItem.setName(documentSnapshot.getString("name"));
+                    artifactItem.setCategory(documentSnapshot.getString("category"));
+                    artifactItem.setPoint(parseInt(documentSnapshot.getString("point")));
+
+                    updatePoint(parseInt(documentSnapshot.getString("point")));
+                    //------------------------------
+
                 } else{
                     Log.d("No document","Document error");
                     //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
@@ -193,5 +199,50 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    private void updatePoint(int artifactPoint) {
+        final int[] userPoint = new int[1];
+
+        documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    userPoint[0] = (int) doc.get("point");
+                }
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+
+        documentReference.update("point", userPoint[0] + artifactPoint);
+    }
+
+    private int getPoint()
+    {
+        final int[] userPoint = new int[1];
+
+        documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    userPoint[0] = (int) doc.get("point");
+                }
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+
+        return userPoint[0];
     }
 }

@@ -6,213 +6,289 @@
     android:layout_height="match_parent"
     android:background="@drawable/background">
 
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <ImageView
         android:id="@+id/imgFloorPlan"
         android:layout_width="412dp"
         android:layout_height="275dp"
+        android:layout_marginTop="244dp"
+        android:layout_marginBottom="212dp"
         android:contentDescription="@string/floorPlan"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_home"
-        app:layout_constraintVertical_bias="0.496"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/floorplan" />
 
     <Button
         android:id="@+id/btnCollection12"
         android:layout_width="43dp"
         android:layout_height="16dp"
+        android:layout_marginStart="243dp"
+        android:layout_marginTop="443dp"
+        android:layout_marginEnd="125dp"
+        android:layout_marginBottom="272dp"
         android:background="@drawable/rectangle"
         android:rotation="35"
         android:text="@string/collection12"
-        app:layout_constraintBottom_toBottomOf="@+id/imgFloorPlan"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.66"
-        app:layout_constraintStart_toStartOf="@+id/imgFloorPlan"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan"
-        app:layout_constraintVertical_bias="0.77" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection11"
-        android:text="@string/collection11"
         android:layout_width="43dp"
         android:layout_height="16dp"
+        android:layout_marginStart="313dp"
+        android:layout_marginTop="322dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginBottom="393dp"
         android:background="@drawable/rectangle"
         android:rotation="35"
-        app:layout_constraintBottom_toBottomOf="@+id/imgFloorPlan"
+        android:text="@string/collection11"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintStart_toStartOf="@+id/imgFloorPlan"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection9"
-        android:text="@string/collection9"
         android:layout_width="43dp"
         android:layout_height="16dp"
+        android:layout_marginStart="115dp"
+        android:layout_marginTop="295dp"
+        android:layout_marginEnd="253dp"
+        android:layout_marginBottom="420dp"
         android:background="@drawable/rectangle"
         android:rotation="28"
-        app:layout_constraintBottom_toBottomOf="@+id/imgFloorPlan"
-        app:layout_constraintEnd_toStartOf="@+id/btnCollection7"
-        app:layout_constraintHorizontal_bias="0.63"
+        android:text="@string/collection9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCollection2"
-        app:layout_constraintVertical_bias="0.100000024" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection8"
-        android:text="@string/collection8"
         android:layout_width="43dp"
         android:layout_height="16dp"
+        android:layout_marginStart="99dp"
+        android:layout_marginTop="441dp"
+        android:layout_marginEnd="269dp"
+        android:layout_marginBottom="274dp"
         android:background="@drawable/rectangle"
         android:rotation="335"
-        app:layout_constraintBottom_toBottomOf="@+id/imgFloorPlan"
-        app:layout_constraintEnd_toStartOf="@+id/btnCollection12"
-        app:layout_constraintStart_toStartOf="@+id/imgFloorPlan"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan"
-        app:layout_constraintVertical_bias="0.76" />
+        android:text="@string/collection8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection7"
-        android:text="@string/collection7"
         android:layout_width="43dp"
         android:layout_height="16dp"
-        android:layout_marginEnd="44dp"
+        android:layout_marginStart="226dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="142dp"
+        android:layout_marginBottom="415dp"
         android:background="@drawable/rectangle"
         android:rotation="326"
-        app:layout_constraintBottom_toBottomOf="@+id/imgFloorPlan"
-        app:layout_constraintEnd_toStartOf="@+id/btnCollection11"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan"
-        app:layout_constraintVertical_bias="0.216" />
+        android:text="@string/collection7"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection6"
-        android:text="@string/collection6"
         android:layout_width="43dp"
         android:layout_height="16dp"
+        android:layout_marginStart="302dp"
+        android:layout_marginTop="422dp"
+        android:layout_marginEnd="66dp"
+        android:layout_marginBottom="293dp"
         android:background="@drawable/rectangle"
         android:rotation="323"
-        app:layout_constraintBottom_toBottomOf="@+id/imgFloorPlan"
+        android:text="@string/collection6"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toEndOf="@+id/btnCollection12"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan"
-        app:layout_constraintVertical_bias="0.69" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection1"
         android:layout_width="49dp"
         android:layout_height="20dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="252dp"
+        android:layout_marginEnd="331dp"
+        android:layout_marginBottom="459dp"
         android:background="@drawable/rectangle"
-        app:layout_constraintStart_toStartOf="@+id/imgFloorPlan"
         android:text="@string/collection1"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection2"
-        android:text="@string/collection2"
         android:layout_width="49dp"
         android:layout_height="20dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="252dp"
+        android:layout_marginEnd="250dp"
+        android:layout_marginBottom="459dp"
         android:background="@drawable/rectangle"
-        app:layout_constraintStart_toEndOf="@+id/btnCollection1"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan" />
+        android:text="@string/collection2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection3"
-        android:text="@string/collection3"
         android:layout_width="49dp"
         android:layout_height="20dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="194dp"
+        android:layout_marginTop="252dp"
+        android:layout_marginEnd="168dp"
+        android:layout_marginBottom="459dp"
         android:background="@drawable/rectangle"
-        app:layout_constraintStart_toEndOf="@+id/btnCollection2"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan" />
+        android:text="@string/collection3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection4"
-        android:text="@string/collection4"
         android:layout_width="49dp"
         android:layout_height="20dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="343dp"
+        android:layout_marginTop="252dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="459dp"
         android:background="@drawable/rectangle"
+        android:text="@string/collection4"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnCollection5"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnPlayer"
-        android:text="@string/playerButton"
         android:layout_width="27dp"
         android:layout_height="29dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="333dp"
+        android:layout_marginEnd="342dp"
+        android:layout_marginBottom="369dp"
         android:background="@drawable/circle"
-        app:layout_constraintBottom_toBottomOf="@+id/imgFloorPlan"
+        android:text="@string/playerButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan"
-        app:layout_constraintVertical_bias="0.36" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnCollection5"
-        android:text="@string/collection5"
         android:layout_width="49dp"
         android:layout_height="20dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="252dp"
+        android:layout_marginEnd="87dp"
+        android:layout_marginBottom="459dp"
         android:background="@drawable/rectangle"
-        app:layout_constraintStart_toEndOf="@+id/btnCollection3"
-        app:layout_constraintTop_toTopOf="@+id/imgFloorPlan" />
+        android:text="@string/collection5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnArtifact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="162dp"
+        android:layout_marginTop="601dp"
+        android:layout_marginEnd="161dp"
+        android:layout_marginBottom="82dp"
         android:text="@string/artifactButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgFloorPlan" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnReset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="286dp"
+        android:layout_marginTop="601dp"
+        android:layout_marginEnd="37dp"
+        android:layout_marginBottom="82dp"
         android:text="reset"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnArtifact"
-        app:layout_constraintTop_toBottomOf="@+id/imgFloorPlan" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnDeneme"
         android:layout_width="58dp"
         android:layout_height="36dp"
+        android:layout_marginStart="177dp"
+        android:layout_marginTop="121dp"
+        android:layout_marginEnd="176dp"
+        android:layout_marginBottom="574dp"
         android:text="@string/blankText"
-        app:layout_constraintBottom_toTopOf="@+id/imgFloorPlan"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_home" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar_home"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="311dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="89dp"
+        android:layout_marginBottom="688dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="34dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="324dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="53dp"
+        android:layout_marginBottom="685dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/star" />
+
+    <TextView
+        android:id="@+id/tv_level"
+        android:layout_width="34dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="358dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="685dp"
+        android:text="10"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
