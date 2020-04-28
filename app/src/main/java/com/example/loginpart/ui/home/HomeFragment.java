@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -23,6 +25,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.loginpart.R;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,12 +35,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
 import java.util.Collection;
 
 import javax.annotation.Nullable;
+
+import static com.example.loginpart.ui.leaderBoard.LeaderBoardFragment.TAG;
 
 public class HomeFragment extends Fragment {
 
@@ -46,15 +55,18 @@ public class HomeFragment extends Fragment {
     Button artifact8, artifact9, artifact11, artifact12;
     Button playerButton;
     Button btnMove,btnReset;
+    Button btnDeneme;
 
     private String artifactInput;
 
 
 
     private FirebaseDatabase firebaseDatabase;
+    private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databaseReference;
+    private DocumentReference documentReference;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -70,27 +82,6 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState){
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-
-        databaseReference.child("mapLocations").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-
-                for(DataSnapshot child : children){
-                    child.getValue();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
 
         playerButton = view.findViewById(R.id.btnPlayer);
 
@@ -110,119 +101,6 @@ public class HomeFragment extends Fragment {
         btnReset = view.findViewById(R.id.btnReset);
 
 
-
-        artifact1.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact1);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact2);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact3.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact3);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact4.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact4);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact5.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact5);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact6.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact6);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact7.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact7);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact8.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact8);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact9.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact9);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact11.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact11);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-        artifact12.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Point p = getPointOfView(artifact12);
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
-
-            }
-        });
-
-
-
         playerButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -236,6 +114,13 @@ public class HomeFragment extends Fragment {
         });
 
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
+        btnDeneme = view.findViewById(R.id.btnDeneme);
 
         btnMove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,7 +136,8 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String inputString = inputArtifact.getText().toString();
-                        //Log.d("Artifact ID: ", inputString);
+                        Log.d("Artifact ID: ", inputString);
+                        movementFunction(inputString);
                     }
                 });
 
@@ -261,6 +147,8 @@ public class HomeFragment extends Fragment {
                         //Cancel
                     }
                 });
+
+
 
                 artifactDialog.create().show();
 
@@ -275,6 +163,35 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+    }
+    //Toast.makeText(context, "No artifact",Toast.LENGTH_LONG);
+    private void movementFunction(final String inputString){
+
+        documentReference = firebaseFirestore.collection("artifacts").document(inputString);
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                if(documentSnapshot.exists()){
+                    String str = documentSnapshot.getString("name");
+                    if(str.equals("deneme")){
+                        btnDeneme.setBackgroundColor(btnDeneme.getContext().getResources().getColor(R.color.Green));
+                    }
+
+                    Log.d("Document name", str);
+                } else{
+                    Log.d("No document","Document error");
+                    //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,e.toString());
+            }
+        });
 
     }
 }
