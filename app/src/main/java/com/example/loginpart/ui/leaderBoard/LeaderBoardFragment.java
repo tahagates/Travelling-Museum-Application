@@ -52,14 +52,13 @@ public class LeaderBoardFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            //Bir kere oluşturduktan sonra buraya tekrar gelmiyor interaktif değil
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 Map<String, Object> user = new HashMap<>();
                                 user = document.getData();
 
                                 String fullName = (String) user.get("fullName");
-                                String point = (String) user.get("point");
+                                int point = Integer.parseInt(user.get("point").toString()) ;
                                 userList.add(new UserModel(fullName,point));
                             }
                             CustomAdapter adapter = new CustomAdapter(getActivity(), userList);

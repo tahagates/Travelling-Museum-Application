@@ -1,21 +1,27 @@
 package com.example.loginpart.model;
 
+import com.google.firebase.auth.FirebaseUser;
+
 public class UserModel {
 
+        private String id;
         private String fullName;
         private String email;
         private String job;
         private int age;
         private String password;
-        private String point;
+        private int point;
         private String reward;
         //path
 
-        public UserModel(String fullName, String point)//rewardda eklenicek daha sonra
+        public UserModel(String fullName, int point)//rewardda eklenicek daha sonra
         {
             this.fullName = fullName;
             this.point = point;
         }
+
+
+
 
         public String getFullName() {
             return fullName;
@@ -25,11 +31,11 @@ public class UserModel {
             this.fullName = fullName;
         }
 
-        public String getPoint() {
+        public int getPoint() {
             return point;
         }
 
-        public void setPoint(String point) {
+        public void setPoint(int point) {
             this.point = point;
         }
 

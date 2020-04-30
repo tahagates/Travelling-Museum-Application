@@ -53,7 +53,8 @@ public class CustomAdapter extends BaseAdapter {
         TextView tv_reward = (TextView) item.findViewById(R.id.tv_reward);
 
         tv_fullName.setText(user.getFullName());
-        tv_point.setText(user.getPoint());
+        //String point = String.valueOf(user.getPoint());
+        tv_point.setText(String.valueOf(user.getPoint()));
         tv_reward.setText("0");
 
         return item;

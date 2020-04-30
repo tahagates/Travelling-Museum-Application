@@ -3,6 +3,7 @@ package com.example.loginpart.ui.profile;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.loginpart.*;
 import com.example.loginpart.R;
+import com.example.loginpart.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +44,7 @@ public class ProfileFragment extends Fragment {
 
     String userID;
     AlertDialog.Builder builder;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -74,8 +77,6 @@ public class ProfileFragment extends Fragment {
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
 
-
-
         DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
         documentReference.addSnapshotListener( new EventListener<DocumentSnapshot>() {
             @Override
@@ -86,6 +87,7 @@ public class ProfileFragment extends Fragment {
                 age.setText(documentSnapshot.getString("age"));
             }
         });
+
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,5 +178,7 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+
 }
 

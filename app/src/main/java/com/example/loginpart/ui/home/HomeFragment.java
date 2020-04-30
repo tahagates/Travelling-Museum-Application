@@ -3,6 +3,7 @@ package com.example.loginpart.ui.home;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.loginpart.R;
 import com.example.loginpart.model.*;
+import com.example.loginpart.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,7 +31,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,6 +45,8 @@ import javax.annotation.Nullable;
 
 import static com.example.loginpart.ui.leaderBoard.LeaderBoardFragment.TAG;
 
+import com.example.loginpart.ui.profile.ProfileFragment;
+
 import static java.lang.Integer.parseInt;
 
 public class HomeFragment extends Fragment {
@@ -50,13 +56,16 @@ public class HomeFragment extends Fragment {
     Button artifact1, artifact2, artifact3, artifact4, artifact5, artifact6, artifact7;
     Button artifact8, artifact9, artifact11, artifact12;
     Button playerButton;
-    Button btnMove,btnReset;
+    Button btnMove, btnReset;
     Button btnDeneme;
 
     ProgressBar progressBar;
 
     private String artifactInput;
 
+    String userID = "";
+
+    Object userPoint;
 
 
     private FirebaseDatabase firebaseDatabase;
@@ -65,6 +74,7 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth.AuthStateListener authStateListener;
     private DatabaseReference databaseReference;
     private DocumentReference documentReference;
+    private DocumentReference documentReferenceUser;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -79,7 +89,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
 
         playerButton = view.findViewById(R.id.btnPlayer);
 
@@ -106,7 +116,7 @@ public class HomeFragment extends Fragment {
                 Point p = getPointOfView(playerButton);
 
 
-                Log.d("Coordinates","Coordinates x:" + p.x + " and y: " + p.y);
+                Log.d("Coordinates", "Coordinates x:" + p.x + " and y: " + p.y);
 
 
             }
@@ -119,13 +129,33 @@ public class HomeFragment extends Fragment {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        //ezginin eklediği kısımlar--------------
-        //progressBar = view.findViewById(R.id.progressBar_home);
-        //progressBar.setMax(50);
-        //Bunu buraya ekleyeceğim ama emin değilim yeri değişebilir.
-        //int userPoint = getPoint();
-        //progressBar.setProgress(userPoint);
-        //int a = 5;
+        //Progress barın doldurulması--------------
+
+        progressBar = view.findViewById(R.id.progressBar_home);
+        progressBar.setMax(50);
+
+        userID = firebaseAuth.getCurrentUser().getUid();
+
+        documentReferenceUser = firebaseFirestore.collection("users").document(userID);
+        documentReferenceUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                if (documentSnapshot.exists()) {
+                    userPoint = documentSnapshot.get("point");
+                    progressBar.setProgress(Integer.parseInt(userPoint.toString()));
+                } else {
+                    Log.d("No document", "Document error");
+                    //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, e.toString());
+            }
+        });
         //-----------------------
 
         btnDeneme = view.findViewById(R.id.btnDeneme);
@@ -147,6 +177,7 @@ public class HomeFragment extends Fragment {
                         Log.d("Artifact ID: ", inputString);
                         movementFunction(inputString);
 
+
                     }
                 });
 
@@ -156,6 +187,7 @@ public class HomeFragment extends Fragment {
                         //Cancel
                     }
                 });
+
 
                 artifactDialog.create().show();
 
@@ -172,8 +204,10 @@ public class HomeFragment extends Fragment {
 
 
     }
+
     //Toast.makeText(context, "No artifact",Toast.LENGTH_LONG);
-    private void movementFunction(final String inputString){
+    private void movementFunction(final String inputString) {
+        final Object[] artifactPoint = new Object[1];
 
         documentReference = firebaseFirestore.collection("artifacts").document(inputString);
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -181,84 +215,33 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                if(documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     String str = documentSnapshot.getString("name");
-                    if(str.equals("deneme")){
+                    if (str.equals("deneme")) {
                         btnDeneme.setBackgroundColor(btnDeneme.getContext().getResources().getColor(R.color.Green));
                     }
 
+                    //--artifact puanını usera ekleme
+                    artifactPoint[0] = documentSnapshot.get("point");
+                    userPoint = (Integer.parseInt(userPoint.toString()) + Integer.parseInt(artifactPoint[0].toString()));
+                    documentReferenceUser.update("point", userPoint);
+                    int a = 5;
+                    progressBar.setProgress(Integer.parseInt(userPoint.toString()));
+                    //---------
+
                     Log.d("Document name", str);
-                } else{
-                    Log.d("No document","Document error");
+                } else {
+                    Log.d("No document", "Document error");
                     //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG,e.toString());
+                Log.d(TAG, e.toString());
             }
         });
 
     }
-/*
-    private void updatePoint(int artifactPoint) {
-        final int[] userPoint = {0};
 
-        documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                if(documentSnapshot.exists()){
-                    userPoint[0] = parseInt(documentSnapshot.getString("point"));
-
-                } else{
-                    Log.d("No document","Document error");
-                    //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-
-        documentReference.update("point", userPoint[0] + artifactPoint);
-    }
-
-    private int getPoint() {
-
-        final int[] userPoint = new int[1];
-        String uID;
-        uID = firebaseAuth.getCurrentUser().getUid();
-
-        documentReference = firebaseFirestore.collection("users").document(uID);
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            //@RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
-                    userPoint[0] = parseInt(documentSnapshot.getString("point"));
-                    int a = 0;
-
-                } else{
-                    Log.d("No document","Document error");
-                    //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-
-
-
-        int usPoint = Integer.parseInt(String.valueOf(userPoint[0]));
-
-        return usPoint;
-
-    }*/
 }
