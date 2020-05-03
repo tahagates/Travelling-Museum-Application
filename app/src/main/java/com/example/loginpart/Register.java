@@ -190,6 +190,10 @@ public class Register extends AppCompatActivity {
                             user.put("job",jobString);
                             user.put("age",ageString);
                             user.put("password",pw1);
+                            //-----
+                            user.put("point",0);
+                            user.put("level",1);
+                            ///----------
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
