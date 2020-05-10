@@ -11,6 +11,7 @@ public class ArtifactModel {
     //gerektiği düşündüğüm için bunları ekliyorum.
     private String category;
     private String name;
+    private boolean isTraveled; //Gezildi mi ?
 
     public ArtifactModel(String aCode,Image aImage,int aLevel) {
         this.aCode = aCode;

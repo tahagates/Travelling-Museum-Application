@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.example.loginpart.model.ArtifactModel;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -38,7 +40,12 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -58,6 +65,20 @@ public class HomeFragment extends Fragment {
     Button playerButton;
     Button btnMove, btnReset;
     Button btnDeneme;
+
+    ArtifactModel art1 = new ArtifactModel("Art1", null, 1);
+    ArtifactModel art2 = new ArtifactModel("Art2", null, 1);
+    ArtifactModel art3 = new ArtifactModel("Art3", null, 1);
+    ArtifactModel art4 = new ArtifactModel("Art4", null, 1);
+    ArtifactModel art5 = new ArtifactModel("Art5", null, 1);
+    ArtifactModel art6 = new ArtifactModel("Art6", null, 1);
+    ArtifactModel art7 = new ArtifactModel("Art7", null, 1);
+    ArtifactModel art8 = new ArtifactModel("Art8", null, 1);
+    ArtifactModel art9 = new ArtifactModel("Art9", null, 1);
+    ArtifactModel art11 = new ArtifactModel("Art11", null, 1);
+    ArtifactModel art12 = new ArtifactModel("Art12", null, 1);
+    ArtifactModel[] artButtons = {art1, art2, art3, art4, art5, art6, art7, art8, art9, art11, art12};
+
 
     ProgressBar progressBar;
 
@@ -206,20 +227,72 @@ public class HomeFragment extends Fragment {
     }
 
     //Toast.makeText(context, "No artifact",Toast.LENGTH_LONG);
+    final String[] artName = {""}; //??
+    List<String> artPath = new ArrayList<String>(); //The path that holds artifacts' ids
+
     private void movementFunction(final String inputString) {
         final Object[] artifactPoint = new Object[1];
-
-        documentReference = firebaseFirestore.collection("artifacts").document(inputString);
+        final String artString = findArt(inputString);
+        artPath.add(inputString);
+        documentReference = firebaseFirestore.collection("artifacts").document(artString);
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                 if (documentSnapshot.exists()) {
-                    String str = documentSnapshot.getString("name");
-                    if (str.equals("deneme")) {
-                        btnDeneme.setBackgroundColor(btnDeneme.getContext().getResources().getColor(R.color.Green));
+                    Point p;
+                    switch (inputString) {
+                        case "c1":
+                            artifact1.setBackgroundColor(artifact1.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact1);
+                            playerButton.setX(p.x - 30);
+                            playerButton.setY(p.y - 150);
+                            break;
+                        case "c2":
+                            artifact2.setBackgroundColor(artifact2.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact2);
+                            break;
+                        case "c3":
+                            artifact3.setBackgroundColor(artifact3.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact3);
+                            break;
+                        case "c4":
+                            artifact4.setBackgroundColor(artifact4.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact4);
+                            break;
+                        case "c5":
+                            artifact5.setBackgroundColor(artifact5.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact5);
+                            break;
+                        case "c6":
+                            artifact6.setBackgroundColor(artifact6.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact6);
+                            break;
+                        case "c7":
+                            artifact7.setBackgroundColor(artifact7.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact7);
+                            break;
+                        case "c8":
+                            artifact8.setBackgroundColor(artifact8.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact8);
+                            break;
+                        case "c9":
+                            artifact9.setBackgroundColor(artifact9.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact9);
+                            break;
+                        case "c11":
+                            artifact11.setBackgroundColor(artifact11.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact11);
+                            break;
+                        case "c12":
+                            artifact12.setBackgroundColor(artifact12.getContext().getResources().getColor((R.color.Green)));
+                            p = getPointOfView(artifact12);
+                            break;
+
+
                     }
+
 
                     //--artifact puanını usera ekleme
                     artifactPoint[0] = documentSnapshot.get("point");
@@ -229,7 +302,7 @@ public class HomeFragment extends Fragment {
                     progressBar.setProgress(Integer.parseInt(userPoint.toString()));
                     //---------
 
-                    Log.d("Document name", str);
+                    Log.d("Document name", artName[0]);
                 } else {
                     Log.d("No document", "Document error");
                     //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
@@ -243,5 +316,44 @@ public class HomeFragment extends Fragment {
         });
 
     }
+
+    private String findArt(String inputString) {
+        if (inputString.toLowerCase().trim().equals("c1")) {
+            inputString = "0VxYe73NJNXBUujv8fY5";
+            artName[0] = "Matisse özgün baskısı";
+        } else if (inputString.toLowerCase().trim().equals("c2")) {
+            inputString = "1Duxzjk86xH8PLw426tK";
+            artName[0] = "papirüs";
+        } else if (inputString.toLowerCase().trim().equals("c3")) {
+            inputString = "4Jtu36bh2fBJGmqZ3RNY";
+            artName[0] = "One world- dünya haritası";
+        } else if (inputString.toLowerCase().trim().equals("c4")) {
+            inputString = "4axUCCwfsRsBLcUNUHyK";
+            artName[0] = "orijinal Vankulu Lügatı";
+        } else if (inputString.toLowerCase().trim().equals("c5")) {
+            inputString = "6I0vYEq3RdBydmK0cWSx";
+            artName[0] = "hat örneği";
+        } else if (inputString.toLowerCase().trim().equals("c6")) {
+            inputString = "6fpybeMKYx6i8coNaCeg";
+            artName[0] = "makta";
+        } else if (inputString.toLowerCase().trim().equals("c7")) {
+            inputString = "7jQurtSZIocrfmz9Gokd\n";
+            artName[0] = "el yapımı kart";
+        } else if (inputString.toLowerCase().trim().equals("c8")) {
+            inputString = "9Ghf0JXzaesTLv5nDjad\n";
+            artName[0] = "Bakır Gravür";
+        } else if (inputString.toLowerCase().trim().equals("c9")) {
+            inputString = "BRpp3Y17hiHNbXq7B499";
+            artName[0] = "kamış kalem";
+        } else if (inputString.toLowerCase().trim().equals("c11")) {
+            inputString = "BVhoT9izFBPivBymOjxu";
+            artName[0] = "mumlu yazı tahtası";
+        } else if (inputString.toLowerCase().trim().equals("c12")) {
+            inputString = "EpRis1XKi4vGjbN9u834";
+            artName[0] = "dünyanın en ince kağıdı";
+        }
+        return inputString;
+    }
+
 
 }
