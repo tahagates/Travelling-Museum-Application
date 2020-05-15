@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.loginpart.model.ArtifactModel;
 
@@ -66,6 +67,8 @@ public class HomeFragment extends Fragment {
     Button btnMove, btnReset;
     Button btnDeneme;
 
+    TextView tv_level;
+
     ArtifactModel art1 = new ArtifactModel("Art1", null, 1);
     ArtifactModel art2 = new ArtifactModel("Art2", null, 1);
     ArtifactModel art3 = new ArtifactModel("Art3", null, 1);
@@ -87,6 +90,7 @@ public class HomeFragment extends Fragment {
     String userID = "";
 
     Object userPoint;
+    Object userLevel;
 
 
     private FirebaseDatabase firebaseDatabase;
@@ -129,6 +133,8 @@ public class HomeFragment extends Fragment {
         btnMove = view.findViewById(R.id.btnArtifact);
         btnReset = view.findViewById(R.id.btnReset);
 
+        tv_level = view.findViewById(R.id.tv_level);
+
 
         playerButton.setOnClickListener(new View.OnClickListener() {
 
@@ -165,7 +171,11 @@ public class HomeFragment extends Fragment {
 
                 if (documentSnapshot.exists()) {
                     userPoint = documentSnapshot.get("point");
-                    progressBar.setProgress(Integer.parseInt(userPoint.toString()));
+                    progressBar.setProgress((Integer.parseInt(userPoint.toString()))%50);
+                    //level alınması
+                    userLevel = documentSnapshot.get("level");
+                    tv_level.setText(userLevel.toString());
+
                 } else {
                     Log.d("No document", "Document error");
                     //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
@@ -297,10 +307,17 @@ public class HomeFragment extends Fragment {
                     //--artifact puanını usera ekleme
                     artifactPoint[0] = documentSnapshot.get("point");
                     userPoint = (Integer.parseInt(userPoint.toString()) + Integer.parseInt(artifactPoint[0].toString()));
+                    int oldProgress = progressBar.getProgress();
                     documentReferenceUser.update("point", userPoint);
-                    int a = 5;
-                    progressBar.setProgress(Integer.parseInt(userPoint.toString()));
-                    //---------
+                    progressBar.setProgress((Integer.parseInt(userPoint.toString()))%50);
+                    int newProgress = progressBar.getProgress();
+                    //---------level update
+                    if(newProgress < oldProgress)
+                    {
+                        userLevel = Integer.parseInt(userLevel.toString()) + 1 ;
+                        documentReferenceUser.update("level", userLevel);
+                        tv_level.setText(userLevel.toString());
+                    }
 
                     Log.d("Document name", artName[0]);
                 } else {
