@@ -23,11 +23,5 @@
         android:label="Leader Board"
         tools:layout="@layout/fragment_leaderboard" />
 
-    <fragment
-        android:id="@+id/nav_map"
-        android:name="com.example.loginpart.ui.home.MapFragment"
-        android:label="Map"
-        tools:layout="@layout/fragment_map"
-        ></fragment>
 
 </navigation>

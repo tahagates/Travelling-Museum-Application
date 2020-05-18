@@ -4,7 +4,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class UserModel {
 
-        private String id;
         private String fullName;
         private String email;
         private String job;
@@ -19,8 +18,6 @@ public class UserModel {
             this.fullName = fullName;
             this.point = point;
         }
-
-
 
 
         public String getFullName() {

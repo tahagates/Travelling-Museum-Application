@@ -60,6 +60,11 @@ public class LeaderBoardFragment extends Fragment {
                                 String fullName = (String) user.get("fullName");
                                 int point = Integer.parseInt(user.get("point").toString()) ;
                                 userList.add(new UserModel(fullName,point));
+/*
+                                if(user.containsKey("age"))
+                                {
+                                    Log.d(TAG, "yes");
+                                }*/
                             }
                             CustomAdapter adapter = new CustomAdapter(getActivity(), userList);
                             listView.setAdapter(adapter);

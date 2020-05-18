@@ -16,9 +16,7 @@
             android:id="@+id/nav_leaderboard"
             android:title="Leader Board"
             android:icon="@drawable/leaderboard"/>
-        <item
-            android:id="@+id/nav_map"
-            android:title="Map" />
+
     </group>
 
 </menu>

@@ -303,8 +303,6 @@ public class HomeFragment extends Fragment {
 
                     }
 
-
-
                     //--artifact puanını usera ekleme
                     artifactPoint[0] = documentSnapshot.get("point");
                     userPoint = (Integer.parseInt(userPoint.toString()) + Integer.parseInt(artifactPoint[0].toString()));

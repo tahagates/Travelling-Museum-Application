@@ -5,11 +5,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +21,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.loginpart.*;
 import com.example.loginpart.R;
+import com.example.loginpart.model.BadgeModel;
 import com.example.loginpart.model.UserModel;
+import com.example.loginpart.ui.leaderBoard.CustomAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +35,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -46,10 +57,57 @@ public class ProfileFragment extends Fragment {
     AlertDialog.Builder builder;
 
 
+    public static final String TAG = "TAG";
+    public ArrayList<BadgeModel> badgeList = new ArrayList<>();
+    public GridView gridview;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.context = getContext();
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+
+        //badgeler için
+        gridview = (GridView) view.findViewById(R.id.gridView);
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+
+        Task<QuerySnapshot> documentReference = firebaseFirestore.collection("badges")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                Map<String, Object> badge = new HashMap<>();
+                                badge = document.getData();
+
+                                String name = (String) badge.get("name");
+                                String description = (String) badge.get("description");
+                                ArrayList<Integer> path = new ArrayList<>();
+                                path = (ArrayList<Integer>) badge.get("path");
+                                //buraya bir kontrol eklenecek
+                                badgeList.add(new BadgeModel(name,description,path));
+/*
+                                if(user.containsKey("age"))
+                                {
+                                    Log.d(TAG, "yes");
+                                }*/
+                            }
+                            BadgeAdapter adapter = new BadgeAdapter(getActivity(), badgeList);
+                            gridview.setAdapter(adapter);
+                            int a = 5;
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+
+                    }
+                }
+                );
+
+        return view;
     }
 
     @Override
