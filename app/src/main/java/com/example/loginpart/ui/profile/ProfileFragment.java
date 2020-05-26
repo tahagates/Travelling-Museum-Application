@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -56,10 +57,14 @@ public class ProfileFragment extends Fragment {
     String userID;
     AlertDialog.Builder builder;
 
-
     public static final String TAG = "TAG";
     public ArrayList<BadgeModel> badgeList = new ArrayList<>();
     public GridView gridview;
+    private DocumentReference documentReferenceUser;
+    public ArrayList<String> userPath = new ArrayList<>();
+
+    DocumentReference documentReferenceArtifact;
+    ArrayList<String> categories = new ArrayList<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -70,7 +75,39 @@ public class ProfileFragment extends Fragment {
 
         //badgeler için
         gridview = (GridView) view.findViewById(R.id.gridView);
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        userID = firebaseAuth.getCurrentUser().getUid();
+
+        documentReferenceUser = firebaseFirestore.collection("users").document(userID);
+        documentReferenceUser.addSnapshotListener( new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                Map<String, Object> user = new HashMap<>();
+                user = documentSnapshot.getData();
+
+                userPath = (ArrayList<String>) user.get("path");
+
+                final Object[] category = new Object[1];
+                for(int i = 0;i < userPath.size(); i++)
+                {
+                    String artifactID = userPath.get(i);
+                    documentReferenceArtifact = firebaseFirestore.collection("artifacts").document(artifactID);
+                    documentReferenceArtifact.addSnapshotListener( new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                            category[0] = (String) documentSnapshot.get("category");
+                            if(!categories.contains(category[0]))
+                            {
+                                categories.add(String.valueOf(category[0]));
+                            }
+                        }
+                    });
+                }
+
+            }
+        });
 
 
         Task<QuerySnapshot> documentReference = firebaseFirestore.collection("badges")
@@ -86,19 +123,21 @@ public class ProfileFragment extends Fragment {
 
                                 String name = (String) badge.get("name");
                                 String description = (String) badge.get("description");
-                                ArrayList<Integer> path = new ArrayList<>();
-                                path = (ArrayList<Integer>) badge.get("path");
-                                //buraya bir kontrol eklenecek
-                                badgeList.add(new BadgeModel(name,description,path));
-/*
-                                if(user.containsKey("age"))
+                                ArrayList<String> path = new ArrayList<>();
+                                if(badge.containsKey("path"))
                                 {
-                                    Log.d(TAG, "yes");
-                                }*/
+                                    path = (ArrayList<String>) badge.get("path");
+                                    badgeList.add(new BadgeModel(name,description,path));
+                                }
+                                else
+                                {
+                                    badgeList.add(new BadgeModel(name,description));
+                                }
                             }
-                            BadgeAdapter adapter = new BadgeAdapter(getActivity(), badgeList);
+                            BadgeAdapter adapter = new BadgeAdapter(getActivity(), badgeList, userPath,categories);
                             gridview.setAdapter(adapter);
-                            int a = 5;
+                            //gridview.setBackgroundResource(R.drawable);
+
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -106,6 +145,7 @@ public class ProfileFragment extends Fragment {
                     }
                 }
                 );
+
 
         return view;
     }
@@ -235,6 +275,22 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
+        //gridview item explanation
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View view, int position, long id) {
+                BadgeModel badge = badgeList.get(position);
+
+                Toast.makeText(context, badge.getDescription(), Toast.LENGTH_SHORT).show();
+                //badge.toggleFavorite();
+
+                // This tells the GridView to redraw itself
+                // in turn calling your BooksAdapter's getView method again for each cell
+                //booksAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
 

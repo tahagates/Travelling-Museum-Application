@@ -7,14 +7,14 @@ public class BadgeModel {
     private String name;
 
     private String description;
-    private ArrayList<Integer> path;
+    private ArrayList<String> path;
 
     public BadgeModel(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public BadgeModel(String name, String description, ArrayList<Integer> path) {
+    public BadgeModel(String name, String description, ArrayList<String> path) {
         this.name = name;
         this.description = description;
         this.path = path;
@@ -36,11 +36,13 @@ public class BadgeModel {
         this.description = description;
     }
 
-    public ArrayList<Integer> getPath() {
+    public ArrayList<String> getPath() {
         return path;
     }
 
-    public void setPath(ArrayList<Integer> path) {
+    public int getPathSize() {return path.size();}
+
+    public void setPath(ArrayList<String> path) {
         this.path = path;
     }
 

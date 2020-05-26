@@ -2,6 +2,8 @@ package com.example.loginpart.model;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 public class UserModel {
 
         private String fullName;
@@ -10,8 +12,11 @@ public class UserModel {
         private int age;
         private String password;
         private int point;
-        private String reward;
-        //path
+
+
+
+    private String reward;
+        private ArrayList<String> path;
 
         public UserModel(String fullName, int point)//rewardda eklenicek daha sonra
         {
@@ -76,6 +81,10 @@ public class UserModel {
         public void setPassword(String password) {
             this.password = password;
         }
+
+        public ArrayList<String> getPath() { return path; }
+
+        public void setPath(ArrayList<String> path) { this.path = path; }
 
 
 }
