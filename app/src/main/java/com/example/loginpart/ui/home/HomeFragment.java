@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.loginpart.R;
 import com.example.loginpart.model.*;
+import com.example.loginpart.ui.leaderBoard.CustomAdapter;
 import com.example.loginpart.ui.profile.ProfileFragment;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,6 +43,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -58,9 +60,8 @@ import javax.annotation.Nullable;
 
 import static com.example.loginpart.ui.leaderBoard.LeaderBoardFragment.TAG;
 
-import com.example.loginpart.ui.profile.ProfileFragment;
 
-import static java.lang.Integer.parseInt;
+
 
 public class HomeFragment extends Fragment {
 
@@ -90,6 +91,7 @@ public class HomeFragment extends Fragment {
     private DatabaseReference databaseReference;
     private DocumentReference documentReference;
     private DocumentReference documentReferenceUser;
+    private Query documentReferenceMapLocation;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -180,7 +182,34 @@ public class HomeFragment extends Fragment {
                         String inputString = inputArtifact.getText().toString();
                         Log.d("Artifact ID: ", inputString);
                         movementFunction(inputString);
-                        movementFunction2(inputString);
+                       // movementFunction2(inputString);
+
+                        Task<QuerySnapshot> documentReference = firebaseFirestore.collection("mapLocations")
+                                .whereEqualTo("artifactID",Integer.parseInt(inputString))
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                                Map<String, Object> loc = new HashMap<>();
+                                                loc = document.getData();
+
+
+                                                int x = Integer.parseInt(loc.get("X").toString()) ;
+                                            }
+
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+
+                                    }
+                                });
+
+
+
+
 
 
                     }
@@ -230,6 +259,8 @@ public class HomeFragment extends Fragment {
                     }
 
                     Log.d("Document name", artName[0]);
+
+
                 } else {
                     Log.d("No document", "Document error");
                     //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
@@ -246,6 +277,11 @@ public class HomeFragment extends Fragment {
     private void movementFunction2(String inputString){
         final int index = Integer.parseInt(inputString) - 1;
 
+
+
+
+
+        /*
         CollectionReference mapLocation = firebaseFirestore.collection("mapLocations");
 
           Query query = mapLocation.whereEqualTo("artifactID", inputString);
@@ -277,7 +313,7 @@ public class HomeFragment extends Fragment {
               public void onFailure(@NonNull Exception e) {
                   return;
               }
-        });
+        });*/
     } //asdasdas
 
 
