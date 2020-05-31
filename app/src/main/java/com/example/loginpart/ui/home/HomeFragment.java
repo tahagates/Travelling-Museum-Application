@@ -247,35 +247,36 @@ public class HomeFragment extends Fragment {
         final int index = Integer.parseInt(inputString) - 1;
 
         CollectionReference mapLocation = firebaseFirestore.collection("mapLocations");
-        Query query = mapLocation.whereEqualTo("artifactID", inputString);
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
-                        Map<String,Object> currentArtifact = new HashMap<>();
-                        currentArtifact = queryDocumentSnapshot.getData();
 
-                        int cX = Integer.parseInt(currentArtifact.get("X").toString());
-                        int cY = Integer.parseInt(currentArtifact.get("Y").toString());
+          Query query = mapLocation.whereEqualTo("artifactID", inputString);
+          query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+              @Override
+              public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                  if(task.isSuccessful()){
+                      for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
+                          Map<String,Object> currentArtifact = new HashMap<>();
+                          currentArtifact = queryDocumentSnapshot.getData();
 
-                        artifacts[index].setBackgroundColor(artifacts[index].getContext().getResources().getColor(R.color.Green));
-                        artifacts[index].setX(cX);
-                        artifacts[index].setY(cY);
+                          int cX = Integer.parseInt(currentArtifact.get("X").toString());
+                          int cY = Integer.parseInt(currentArtifact.get("Y").toString());
 
-                        documentReferenceUser.update("path",artPath);
+                          artifacts[index].setBackgroundColor(artifacts[index].getContext().getResources().getColor(R.color.Green));
+                          artifacts[index].setX(cX);
+                          artifacts[index].setY(cY);
 
-                    }
-                }
-                else{
-                    Toast.makeText(context,"Failure",Toast.LENGTH_LONG);
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                return;
-            }
+                          documentReferenceUser.update("path",artPath);
+
+                      }
+                  }
+                  else{
+                      Toast.makeText(context,"Failure",Toast.LENGTH_LONG);
+                  }
+              }
+          }).addOnFailureListener(new OnFailureListener() {
+              @Override
+              public void onFailure(@NonNull Exception e) {
+                  return;
+              }
         });
     }
 
@@ -283,3 +284,4 @@ public class HomeFragment extends Fragment {
 
 
 }
+
