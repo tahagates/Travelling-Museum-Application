@@ -181,7 +181,7 @@ public class HomeFragment extends Fragment {
                         inputString = inputArtifact.getText().toString();
                         //Log.d("Artifact ID: ", inputString);
                         pointFunction(inputString);
-                        
+
                         //////////////////////////////////////////////////// FOR MOVEMENT
                         readData(new FirestoneCallBack() {
                             @Override
