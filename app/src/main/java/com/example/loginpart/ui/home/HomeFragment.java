@@ -1,9 +1,9 @@
 package com.example.loginpart.ui.home;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,19 +17,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.loginpart.model.ArtifactModel;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.loginpart.R;
-import com.example.loginpart.model.*;
-import com.example.loginpart.ui.leaderBoard.CustomAdapter;
-import com.example.loginpart.ui.profile.ProfileFragment;
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,24 +30,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -71,8 +56,8 @@ public class HomeFragment extends Fragment {
     Button artifact8, artifact9, artifact11, artifact12;
     Button playerButton;
     Button btnMove;
-    Button[] artifacts = {artifact1, artifact2, artifact3, artifact4, artifact5, artifact6,
-            artifact7,artifact8, artifact9, artifact11, artifact12};
+    protected ArrayList<Button> artifactButtons = new ArrayList<Button>();
+    String inputString;
 
     ImageView floorPlan;
 
@@ -105,6 +90,7 @@ public class HomeFragment extends Fragment {
         return new Point(location[0], location[1]);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
 
@@ -121,6 +107,19 @@ public class HomeFragment extends Fragment {
         artifact9 = view.findViewById(R.id.btnCollection9);
         artifact11 = view.findViewById(R.id.btnCollection11);
         artifact12 = view.findViewById(R.id.btnCollection12);
+
+
+        artifactButtons.add(artifact1);
+        artifactButtons.add(artifact2);
+        artifactButtons.add(artifact3);
+        artifactButtons.add(artifact4);
+        artifactButtons.add(artifact5);
+        artifactButtons.add(artifact6);
+        artifactButtons.add(artifact7);
+        artifactButtons.add(artifact8);
+        artifactButtons.add(artifact9);
+        artifactButtons.add(artifact11);
+        artifactButtons.add(artifact12);
 
         floorPlan = view.findViewById(R.id.imgFloorPlan);
 
@@ -165,7 +164,7 @@ public class HomeFragment extends Fragment {
             }
         });
         //------------------------------------------------------------------------------------------
-
+        
         btnMove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,35 +178,18 @@ public class HomeFragment extends Fragment {
                 artifactDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String inputString = inputArtifact.getText().toString();
-                        Log.d("Artifact ID: ", inputString);
-                        movementFunction(inputString);
-                       // movementFunction2(inputString);
-
-                        Task<QuerySnapshot> documentReference = firebaseFirestore.collection("mapLocations")
-                                .whereEqualTo("artifactID",Integer.parseInt(inputString))
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                                Map<String, Object> loc = new HashMap<>();
-                                                loc = document.getData();
-
-
-                                                int x = Integer.parseInt(loc.get("X").toString()) ;
-                                            }
-
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-
-                                    }
-                                });
-
-
+                        inputString = inputArtifact.getText().toString();
+                        //Log.d("Artifact ID: ", inputString);
+                        pointFunction(inputString);
+                        
+                        //////////////////////////////////////////////////// FOR MOVEMENT
+                        readData(new FirestoneCallBack() {
+                            @Override
+                            public void onCallBack(List<Integer> artifactInformatics) {
+                                //Integer array = artifactInformatics.get(0);
+                            }
+                        });
+                        ////////////////////////////////////////////////////
 
 
 
@@ -224,17 +206,74 @@ public class HomeFragment extends Fragment {
                 artifactDialog.create().show();
             }
         });
+
+
+        final float[] lastTouchDownXY = new float[2];
+        floorPlan.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    lastTouchDownXY[0] = event.getX();
+                    lastTouchDownXY[1] = event.getY();
+                }
+
+                return false;
+            }
+        });
+
+        floorPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float x = lastTouchDownXY[0];
+                float y = lastTouchDownXY[1];
+
+                Log.i("TAG", "onLongClick: x = " + x + ", y = " + y);
+            }
+        });
+
     }
+    private void readData(final FirestoneCallBack firestoneCallBack){
+        int index = Integer.parseInt(inputString) - 1;
+        Task<QuerySnapshot> documentReference = firebaseFirestore.collection("mapLocations")
+                .whereEqualTo("artifactID",index)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<Integer> artifactInformatics = new ArrayList<Integer>();
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())){
+                                int currentArtifact = document.toObject(Integer.class);
+                                artifactInformatics.add(currentArtifact);
+
+                                int x = (int) document.get("X");
+                                int y = (int) document.get("Y");
+                                Log.d("x - y ", x + " - " + y);
+
+                                int artID = (int) document.get("artifactID");
+                                Log.d("artifact id ", artID + " ");
+                            }
+                            firestoneCallBack.onCallBack(artifactInformatics);
+                        }
+                    }
+                });
+    }
+
+    private interface FirestoneCallBack {
+        void onCallBack(List<Integer> artifactInformatics);
+    }
+
+
 
     //Toast.makeText(context, "No artifact",Toast.LENGTH_LONG);
     final String[] artName = {""}; //??
     List<String> artPath = new ArrayList<String>(); //The path that holds artifacts' ids
 
-    private void movementFunction(final String inputString) {
+    private void pointFunction(final String inputString) {
         final Object[] artifactPoint = new Object[1];
 
         //final String artString = findArt(inputString);
-        artPath.add(inputString);
+        //artPath.add(inputString);
         documentReference = firebaseFirestore.collection("artifacts").document(inputString);
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -274,49 +313,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void movementFunction2(String inputString){
-        final int index = Integer.parseInt(inputString) - 1;
+    private void movementFunction(final String inputString){
 
-
-
-
-
-        /*
-        CollectionReference mapLocation = firebaseFirestore.collection("mapLocations");
-
-          Query query = mapLocation.whereEqualTo("artifactID", inputString);
-          query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-              @Override
-              public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                  if(task.isSuccessful()){
-                      for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
-                          Map<String,Object> currentArtifact = new HashMap<>();
-                          currentArtifact = queryDocumentSnapshot.getData();
-
-                          int cX = Integer.parseInt(currentArtifact.get("X").toString());
-                          int cY = Integer.parseInt(currentArtifact.get("Y").toString());
-
-                          artifacts[index].setBackgroundColor(artifacts[index].getContext().getResources().getColor(R.color.Green));
-                          artifacts[index].setX(cX);
-                          artifacts[index].setY(cY);
-
-                          documentReferenceUser.update("path",artPath);
-
-                      }
-                  }
-                  else{
-                      Toast.makeText(context,"Failure",Toast.LENGTH_LONG);
-                  }
-              }
-          }).addOnFailureListener(new OnFailureListener() {
-              @Override
-              public void onFailure(@NonNull Exception e) {
-                  return;
-              }
-        });*/
-    } //asdasdas
-
-
+    }
 
 
 }
