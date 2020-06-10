@@ -38,10 +38,13 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
+import com.example.loginpart.model.artMapLocModel;
 
 import static com.example.loginpart.ui.leaderBoard.LeaderBoardFragment.TAG;
 
@@ -58,7 +61,7 @@ public class HomeFragment extends Fragment {
     Button btnMove;
     protected ArrayList<Button> artifactButtons = new ArrayList<Button>();
     String inputString;
-
+    protected List<artMapLocModel> artifactLocations = new ArrayList<artMapLocModel>();
     ImageView floorPlan;
 
     TextView tv_level;
@@ -76,12 +79,17 @@ public class HomeFragment extends Fragment {
     private DatabaseReference databaseReference;
     private DocumentReference documentReference;
     private DocumentReference documentReferenceUser;
-    private Query documentReferenceMapLocation;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.context = getContext();
+
+
+
         return inflater.inflate(R.layout.fragment_home, container, false);
+
+
     }
 
     private Point getPointOfView(View view) {
@@ -164,7 +172,29 @@ public class HomeFragment extends Fragment {
             }
         });
         //------------------------------------------------------------------------------------------
-        
+        //Fulfilling the map locations at the beginning of the page in asc order
+        Task<QuerySnapshot> collectionSnapshot = firebaseFirestore.collection("mapLocations")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                Map<String,Object> tempMap = new HashMap<String, Object>();
+                                tempMap = documentSnapshot.getData();
+
+                                long x = (long) tempMap.get("X");
+                                long y = (long)tempMap.get("Y");
+                                long id = (long)tempMap.get("artifactID");
+
+                                artMapLocModel tempModel = new artMapLocModel(x,y,id);
+
+                                artifactLocations.add(tempModel);
+                            }
+                        }
+                    }
+                });
+
         btnMove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,20 +209,10 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         inputString = inputArtifact.getText().toString();
-                        //Log.d("Artifact ID: ", inputString);
+
                         pointFunction(inputString);
 
-                        //////////////////////////////////////////////////// FOR MOVEMENT
-                        readData(new FirestoneCallBack() {
-                            @Override
-                            public void onCallBack(List<Integer> artifactInformatics) {
-                                //Integer array = artifactInformatics.get(0);
-                            }
-                        });
-                        ////////////////////////////////////////////////////
-
-
-
+                        movementFunction(inputString);
 
                     }
                 });
@@ -232,37 +252,6 @@ public class HomeFragment extends Fragment {
         });
 
     }
-    private void readData(final FirestoneCallBack firestoneCallBack){
-        int index = Integer.parseInt(inputString) - 1;
-        Task<QuerySnapshot> documentReference = firebaseFirestore.collection("mapLocations")
-                .whereEqualTo("artifactID",index)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        List<Integer> artifactInformatics = new ArrayList<Integer>();
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())){
-                                int currentArtifact = document.toObject(Integer.class);
-                                artifactInformatics.add(currentArtifact);
-
-                                int x = (int) document.get("X");
-                                int y = (int) document.get("Y");
-                                Log.d("x - y ", x + " - " + y);
-
-                                int artID = (int) document.get("artifactID");
-                                Log.d("artifact id ", artID + " ");
-                            }
-                            firestoneCallBack.onCallBack(artifactInformatics);
-                        }
-                    }
-                });
-    }
-
-    private interface FirestoneCallBack {
-        void onCallBack(List<Integer> artifactInformatics);
-    }
-
 
 
     //Toast.makeText(context, "No artifact",Toast.LENGTH_LONG);
@@ -313,7 +302,21 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @SuppressLint("ResourceAsColor")
     private void movementFunction(final String inputString){
+        final int index = Integer.parseInt(inputString);
+
+        for (int i = 0; i < artifactLocations.size(); i++){
+            int currentID = (int)artifactLocations.get(i).getArtifactID();
+            if (index == currentID){
+                int x = (int)artifactLocations.get(i).getCoordinateX();
+                int y = (int)artifactLocations.get(i).getCoordinateY();
+//                int id = (int)artifactLocations.get(i).getArtifactID();
+                artifactButtons.get(index - 1).setBackgroundColor(R.color.Green);
+                playerButton.setX(x);
+                playerButton.setY(y);
+            }
+        }
 
     }
 
