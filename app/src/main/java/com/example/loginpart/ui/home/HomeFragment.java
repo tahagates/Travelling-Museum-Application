@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -64,6 +65,8 @@ public class HomeFragment extends Fragment {
     protected List<artMapLocModel> artifactLocations = new ArrayList<artMapLocModel>();
     ImageView floorPlan;
 
+    List<Float> buttonCoordinatesX;
+    List<Float> buttonCoordinatesY;
     TextView tv_level;
 
     ProgressBar progressBar;
@@ -173,28 +176,48 @@ public class HomeFragment extends Fragment {
         });
         //------------------------------------------------------------------------------------------
         //Fulfilling the map locations at the beginning of the page in asc order
-        Task<QuerySnapshot> collectionSnapshot = firebaseFirestore.collection("mapLocations")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                                Map<String,Object> tempMap = new HashMap<String, Object>();
-                                tempMap = documentSnapshot.getData();
+        CollectionReference documentReference = firebaseFirestore.collection("mapLocations");
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        Map<String,Object> tempMap = new HashMap<String, Object>();
+                        tempMap = documentSnapshot.getData();
 
-                                long x = (long) tempMap.get("X");
-                                long y = (long)tempMap.get("Y");
-                                long id = (long)tempMap.get("artifactID");
+                        long x = (long) tempMap.get("X");
+                        long y = (long)tempMap.get("Y");
+                        long id = (long)tempMap.get("artifactID");
 
-                                artMapLocModel tempModel = new artMapLocModel(x,y,id);
+                        artMapLocModel tempModel = new artMapLocModel(x,y,id);
 
-                                artifactLocations.add(tempModel);
-                            }
-                        }
+                        artifactLocations.add(tempModel);
                     }
-                });
-
+                }
+            }
+        });
+//        Task<QuerySnapshot> collectionSnapshot = firebaseFirestore.collection("mapLocations")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isSuccessful()){
+//                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+//                                Map<String,Object> tempMap = new HashMap<String, Object>();
+//                                tempMap = documentSnapshot.getData();
+//
+//                                long x = (long) tempMap.get("X");
+//                                long y = (long)tempMap.get("Y");
+//                                long id = (long)tempMap.get("artifactID");
+//
+//                                artMapLocModel tempModel = new artMapLocModel(x,y,id);
+//
+//                                artifactLocations.add(tempModel);
+//                            }
+//                        }
+//                    }
+//                });
+        updateCoordinates();
         btnMove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,6 +343,29 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void updateCoordinates(){
+
+//        //Getting current homepage buttons' coordinates
+//        for (int i = 0; i < artifactButtons.size(); i++){
+//            buttonCoordinatesX.add(artifactButtons.get(i).getX());
+//            buttonCoordinatesY.add(artifactButtons.get(i).getY());
+//        }
+
+        Map<Float,Object> data = new HashMap<>();
+        for(float i = 0; i < artifactLocations.size(); i++){
+            Task<Void> collectionReference = firebaseFirestore.collection("mapLocations").document(Integer.toString(Math.round(i)))
+                    .update(
+                            "X", artifactLocations.get((int)i).getCoordinateX(),
+                            "Y",artifactLocations.get((int)i).getCoordinateY()
+                    ).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            //Task successful
+                        }
+                    });
+        }
+
+    }
 
 }
 
