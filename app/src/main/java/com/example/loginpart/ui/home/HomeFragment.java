@@ -61,17 +61,12 @@ public class HomeFragment extends Fragment {
     Button playerButton;
     Button btnMove;
     protected ArrayList<Button> artifactButtons = new ArrayList<Button>();
-    String inputString;
     protected List<artMapLocModel> artifactLocations = new ArrayList<artMapLocModel>();
-    ImageView floorPlan;
-
-    List<Float> buttonCoordinatesX;
-    List<Float> buttonCoordinatesY;
     TextView tv_level;
-
     ProgressBar progressBar;
 
     String userID = "";
+    String inputString;
 
     Object userPoint;
     Object userLevel;
@@ -87,26 +82,16 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.context = getContext();
-
-
-
-        return inflater.inflate(R.layout.fragment_home, container, false);
-
-
-    }
-
-    private Point getPointOfView(View view) {
-        int[] location = new int[2];
-        view.getLocationInWindow(location);
-        return new Point(location[0], location[1]);
+        View view = inflater.inflate(R.layout.fragment_home,container,false);
+        return view;
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
 
+        //Creating necessary objects
         playerButton = view.findViewById(R.id.btnPlayer);
-
         artifact1 = view.findViewById(R.id.btnCollection1);
         artifact2 = view.findViewById(R.id.btnCollection2);
         artifact3 = view.findViewById(R.id.btnCollection3);
@@ -118,8 +103,11 @@ public class HomeFragment extends Fragment {
         artifact9 = view.findViewById(R.id.btnCollection9);
         artifact11 = view.findViewById(R.id.btnCollection11);
         artifact12 = view.findViewById(R.id.btnCollection12);
+        btnMove = view.findViewById(R.id.btnArtifact);
+        tv_level = view.findViewById(R.id.tv_level);
 
 
+        //Adding artifacts buttons to list
         artifactButtons.add(artifact1);
         artifactButtons.add(artifact2);
         artifactButtons.add(artifact3);
@@ -132,24 +120,22 @@ public class HomeFragment extends Fragment {
         artifactButtons.add(artifact11);
         artifactButtons.add(artifact12);
 
-        floorPlan = view.findViewById(R.id.imgFloorPlan);
-
-        btnMove = view.findViewById(R.id.btnArtifact);
-
-        tv_level = view.findViewById(R.id.tv_level);
-
+        //Creating necessary firebase objects
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        //Progress bar function --------------------------------------------------------------------
+        //Coordinate functions call
+        Log.d("x and y",artifact1.getX() + " "+ artifact1.getY());
+        fillLocation(artifactButtons);
+        updateCoordinates();
 
+
+        //Progress bar function --------------------------------------------------------------------
         progressBar = view.findViewById(R.id.progressBar_home);
         progressBar.setMax(50);
-
         userID = firebaseAuth.getCurrentUser().getUid();
-
         documentReferenceUser = firebaseFirestore.collection("users").document(userID);
         documentReferenceUser.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -174,50 +160,11 @@ public class HomeFragment extends Fragment {
                 Log.d(TAG, e.toString());
             }
         });
-        //------------------------------------------------------------------------------------------
-        //Fulfilling the map locations at the beginning of the page in asc order
-        CollectionReference documentReference = firebaseFirestore.collection("mapLocations");
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                        Map<String,Object> tempMap = new HashMap<String, Object>();
-                        tempMap = documentSnapshot.getData();
+        //-----------------------------------------------------------------------------------------
 
-                        long x = (long) tempMap.get("X");
-                        long y = (long)tempMap.get("Y");
-                        long id = (long)tempMap.get("artifactID");
 
-                        artMapLocModel tempModel = new artMapLocModel(x,y,id);
 
-                        artifactLocations.add(tempModel);
-                    }
-                }
-            }
-        });
-//        Task<QuerySnapshot> collectionSnapshot = firebaseFirestore.collection("mapLocations")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-//                                Map<String,Object> tempMap = new HashMap<String, Object>();
-//                                tempMap = documentSnapshot.getData();
-//
-//                                long x = (long) tempMap.get("X");
-//                                long y = (long)tempMap.get("Y");
-//                                long id = (long)tempMap.get("artifactID");
-//
-//                                artMapLocModel tempModel = new artMapLocModel(x,y,id);
-//
-//                                artifactLocations.add(tempModel);
-//                            }
-//                        }
-//                    }
-//                });
-        updateCoordinates();
+        //Main function of the homepage
         btnMove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,11 +179,9 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         inputString = inputArtifact.getText().toString();
-
                         pointFunction(inputString);
-
                         movementFunction(inputString);
-
+                        Log.d("empty", "this is an empty message");
                     }
                 });
 
@@ -250,34 +195,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-        final float[] lastTouchDownXY = new float[2];
-        floorPlan.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    lastTouchDownXY[0] = event.getX();
-                    lastTouchDownXY[1] = event.getY();
-                }
-
-                return false;
-            }
-        });
-
-        floorPlan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                float x = lastTouchDownXY[0];
-                float y = lastTouchDownXY[1];
-
-                Log.i("TAG", "onLongClick: x = " + x + ", y = " + y);
-            }
-        });
-
     }
 
 
-    //Toast.makeText(context, "No artifact",Toast.LENGTH_LONG);
+
     final String[] artName = {""}; //??
     List<String> artPath = new ArrayList<String>(); //The path that holds artifacts' ids
 
@@ -328,7 +249,6 @@ public class HomeFragment extends Fragment {
     @SuppressLint("ResourceAsColor")
     private void movementFunction(final String inputString){
         final int index = Integer.parseInt(inputString);
-
         for (int i = 0; i < artifactLocations.size(); i++){
             int currentID = (int)artifactLocations.get(i).getArtifactID();
             if (index == currentID){
@@ -343,14 +263,14 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private Point getPointOfView(View view) {
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        return new Point(location[0], location[1]);
+    }
+
+
     private void updateCoordinates(){
-
-//        //Getting current homepage buttons' coordinates
-//        for (int i = 0; i < artifactButtons.size(); i++){
-//            buttonCoordinatesX.add(artifactButtons.get(i).getX());
-//            buttonCoordinatesY.add(artifactButtons.get(i).getY());
-//        }
-
         Map<Float,Object> data = new HashMap<>();
         for(float i = 0; i < artifactLocations.size(); i++){
             Task<Void> collectionReference = firebaseFirestore.collection("mapLocations").document(Integer.toString(Math.round(i)))
@@ -364,8 +284,14 @@ public class HomeFragment extends Fragment {
                         }
                     });
         }
-
     }
 
+    private void fillLocation(List<Button> buttons){
+       for(int i = 0; i < buttons.size(); i++){
+           Point p = getPointOfView(buttons.get(i));
+           Log.d("x and y of ", i + ": " + p.x + " " + p.y);
+
+       }
+    }
 }
 

@@ -1,25 +1,25 @@
 package com.example.loginpart.model;
 
 public class artMapLocModel {
-    private long coordinateX;
-    private long coordinateY;
-    private long artifactID;
+    private float coordinateX;
+    private float coordinateY;
+    private float artifactID;
 
-    public artMapLocModel(long coordinateX, long coordinateY, long artifactID) {
+    public artMapLocModel(float coordinateX, float coordinateY, float artifactID) {
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.artifactID = artifactID;
     }
 
-    public long getCoordinateX() {
+    public float getCoordinateX() {
         return coordinateX;
     }
 
-    public long getCoordinateY() {
+    public float getCoordinateY() {
         return coordinateY;
     }
 
-    public long getArtifactID() {
+    public float getArtifactID() {
         return artifactID;
     }
 
