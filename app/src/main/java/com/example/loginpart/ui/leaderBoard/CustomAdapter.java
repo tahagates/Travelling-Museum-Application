@@ -55,7 +55,7 @@ public class CustomAdapter extends BaseAdapter {
         tv_fullName.setText(user.getFullName());
         //String point = String.valueOf(user.getPoint());
         tv_point.setText(String.valueOf(user.getPoint()));
-        tv_reward.setText("0");
+        tv_reward.setText(String.valueOf(user.getReward()));
 
         return item;
     }

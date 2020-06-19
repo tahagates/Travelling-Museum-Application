@@ -20,7 +20,10 @@ import com.example.loginpart.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,6 +39,8 @@ public class LeaderBoardFragment extends Fragment {
     public static final String TAG = "TAG";
     public ArrayList<UserModel> userList = new ArrayList<>();
     public ListView listView;
+    private DocumentReference documentReferenceUser;
+    private FirebaseFirestore firebaseFirestore;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +48,8 @@ public class LeaderBoardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_leaderboard, container, false);
         listView = (ListView) view.findViewById(R.id.listView);
 
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
 
         Task<QuerySnapshot> documentReference = firebaseFirestore.collection("users")
                 .orderBy("point", Query.Direction.DESCENDING)
@@ -52,19 +58,33 @@ public class LeaderBoardFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            int index = 1;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 Map<String, Object> user = new HashMap<>();
                                 user = document.getData();
 
                                 String fullName = (String) user.get("fullName");
-                                int point = Integer.parseInt(user.get("point").toString()) ;
-                                userList.add(new UserModel(fullName,point));
-/*
-                                if(user.containsKey("age"))
+                                int point = Integer.parseInt(user.get("point").toString());
+                                int reward;
+                                if(index == 1)
                                 {
-                                    Log.d(TAG, "yes");
-                                }*/
+                                    reward = 500;
+                                }
+                                else if(index == 2)
+                                {
+                                    reward = 250;
+                                }
+                                else if(index == 3)
+                                {
+                                    reward = 100;
+                                }
+                                else
+                                {
+                                    reward = 0;
+                                }
+                                userList.add(new UserModel(fullName,point,reward));
+                                index = index + 1;
                             }
                             CustomAdapter adapter = new CustomAdapter(getActivity(), userList);
                             listView.setAdapter(adapter);

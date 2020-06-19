@@ -17,12 +17,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.example.loginpart.Login;
 import com.example.loginpart.R;
+import com.example.loginpart.model.BadgeModel;
+import com.example.loginpart.model.QuestionModel;
+import com.example.loginpart.ui.profile.BadgeAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -78,6 +83,8 @@ public class HomeFragment extends Fragment {
     private DocumentReference documentReference;
     private DocumentReference documentReferenceUser;
 
+    public ArrayList<QuestionModel> questionList = new ArrayList<>();
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -92,6 +99,7 @@ public class HomeFragment extends Fragment {
 
         //Creating necessary objects
         playerButton = view.findViewById(R.id.btnPlayer);
+
         artifact1 = view.findViewById(R.id.btnCollection1);
         artifact2 = view.findViewById(R.id.btnCollection2);
         artifact3 = view.findViewById(R.id.btnCollection3);
@@ -131,6 +139,32 @@ public class HomeFragment extends Fragment {
         fillLocation(artifactButtons);
         updateCoordinates();
 
+        //full QuestionList
+        Task<QuerySnapshot> documentReference = firebaseFirestore.collection("questions")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                               if (task.isSuccessful()) {
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+                                                       Log.d(TAG, document.getId() + " => " + document.getData());
+                                                       Map<String, Object> quiz = new HashMap<>();
+                                                       quiz = document.getData();
+
+                                                       String question = (String) quiz.get("question");
+                                                       int artID = Integer.parseInt(quiz.get("artifactID").toString());
+
+                                                       questionList.add(new QuestionModel(artID,question));
+
+                                                   }
+                                               } else {
+                                                   Log.d(TAG, "Error getting documents: ", task.getException());
+                                               }
+
+                                           }
+                                       }
+                );
+
 
         //Progress bar function --------------------------------------------------------------------
         progressBar = view.findViewById(R.id.progressBar_home);
@@ -144,7 +178,7 @@ public class HomeFragment extends Fragment {
 
                 if (documentSnapshot.exists()) {
                     userPoint = documentSnapshot.get("point");
-                    progressBar.setProgress((Integer.parseInt(userPoint.toString()))%50);
+                    progressBar.setProgress((Integer.parseInt(userPoint.toString())) % 50);
                     //leveling up
                     userLevel = documentSnapshot.get("level");
                     tv_level.setText(userLevel.toString());
@@ -161,6 +195,7 @@ public class HomeFragment extends Fragment {
             }
         });
         //-----------------------------------------------------------------------------------------
+
 
 
 
@@ -181,7 +216,11 @@ public class HomeFragment extends Fragment {
                         inputString = inputArtifact.getText().toString();
                         pointFunction(inputString);
                         movementFunction(inputString);
+                        quizFunction(inputString);
                         Log.d("empty", "this is an empty message");
+
+
+
                     }
                 });
 
@@ -284,8 +323,59 @@ public class HomeFragment extends Fragment {
                         }
                     });
         }
+
     }
 
+    private void quizFunction(final String inputString) {
+
+        final EditText answer = new EditText(context);
+
+        QuestionModel question = new QuestionModel(0,"a");
+        for(int i = 0;i < questionList.size();i++)
+        {
+            if(questionList.get(i).getArtifactID() == Integer.parseInt(inputString))
+            {
+                question = questionList.get(i);
+                break;
+            }
+        }
+
+        if(!question.getQuestion().equals("a"))
+        {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+            alertDialog.setTitle("QUESTION");
+            alertDialog.setView(answer);
+            alertDialog.setMessage(question.getQuestion())
+                    .setCancelable(false)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            userPoint = (Integer.parseInt(userPoint.toString()) + 20);
+                            int oldProgress = progressBar.getProgress();
+                            documentReferenceUser.update("point", userPoint);
+                            progressBar.setProgress((Integer.parseInt(userPoint.toString()))%50);
+                            int newProgress = progressBar.getProgress();
+                            //---------level update
+                            if(newProgress < oldProgress)
+                            {
+                                userLevel = Integer.parseInt(userLevel.toString()) + 1 ;
+                                documentReferenceUser.update("level", userLevel);
+                                tv_level.setText(userLevel.toString());
+                            }
+
+                            Toast.makeText(context,"Well done! Your score is on the rise.",Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            Toast.makeText(context,"You could increase your score by answering the question :(",Toast.LENGTH_SHORT).show();
+                        }
+                    }).show();
+        }
+
+    }
     private void fillLocation(List<Button> buttons){
        for(int i = 0; i < buttons.size(); i++){
            Point p = getPointOfView(buttons.get(i));

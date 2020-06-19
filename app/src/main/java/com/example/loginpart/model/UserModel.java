@@ -12,16 +12,17 @@ public class UserModel {
         private int age;
         private String password;
         private int point;
+        private int reward;
 
 
 
-    private String reward;
         private ArrayList<String> path;
 
-        public UserModel(String fullName, int point)//rewardda eklenicek daha sonra
+        public UserModel(String fullName, int point,int reward)
         {
             this.fullName = fullName;
             this.point = point;
+            this.reward = reward;
         }
 
 
@@ -41,11 +42,11 @@ public class UserModel {
             this.point = point;
         }
 
-        public String getReward() {
+        public int getReward() {
             return reward;
         }
 
-        public void setReward(String reward) {
+        public void setReward(int reward) {
             this.reward = reward;
         }
 

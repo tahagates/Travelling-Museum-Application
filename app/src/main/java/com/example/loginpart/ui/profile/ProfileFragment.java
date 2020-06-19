@@ -283,11 +283,6 @@ public class ProfileFragment extends Fragment {
                 BadgeModel badge = badgeList.get(position);
 
                 Toast.makeText(context, badge.getDescription(), Toast.LENGTH_SHORT).show();
-                //badge.toggleFavorite();
-
-                // This tells the GridView to redraw itself
-                // in turn calling your BooksAdapter's getView method again for each cell
-                //booksAdapter.notifyDataSetChanged();
             }
         });
 

@@ -193,6 +193,7 @@ public class Register extends AppCompatActivity {
                             //-----
                             user.put("point",0);
                             user.put("level",1);
+                            user.put("reward",0);
                             ///----------
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
