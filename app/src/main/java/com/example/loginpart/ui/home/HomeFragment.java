@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -135,7 +136,7 @@ public class HomeFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         //Coordinate functions call
-        Log.d("x and y",artifact1.getX() + " "+ artifact1.getY());
+        //Log.d("1x and y",artifact1.getX() + " "+ artifact1.getY());
         fillLocation(artifactButtons);
         updateCoordinates();
 
@@ -312,7 +313,8 @@ public class HomeFragment extends Fragment {
     private void updateCoordinates(){
         Map<Float,Object> data = new HashMap<>();
         for(float i = 0; i < artifactLocations.size(); i++){
-            Task<Void> collectionReference = firebaseFirestore.collection("mapLocations").document(Integer.toString(Math.round(i)))
+            Task<Void> collectionReference = firebaseFirestore.collection("mapLocations")
+                    .document(Integer.toString(Math.round(i)))
                     .update(
                             "X", artifactLocations.get((int)i).getCoordinateX(),
                             "Y",artifactLocations.get((int)i).getCoordinateY()
@@ -376,12 +378,22 @@ public class HomeFragment extends Fragment {
         }
 
     }
+
     private void fillLocation(List<Button> buttons){
        for(int i = 0; i < buttons.size(); i++){
-           Point p = getPointOfView(buttons.get(i));
-           Log.d("x and y of ", i + ": " + p.x + " " + p.y);
+           final Button temp2 = buttons.get(i);
+           final int finalI = i+1;
+           temp2.post(new Runnable() {
+               @Override
+               public void run() {
+                   artMapLocModel artMapLocModel = new artMapLocModel(temp2.getX(),temp2.getY(),finalI);
+                   artifactLocations.add(artMapLocModel);
+                   Log.d("empty",  finalI + " "+temp2.getX() + " " + temp2.getY());
+               }
+           });
 
        }
     }
+
 }
 
