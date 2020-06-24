@@ -95,7 +95,7 @@ public class BadgeAdapter extends BaseAdapter {
                 if(isVisibleBadge == false)
                 {
                     tv_badgeName.setVisibility(View.INVISIBLE);
-                    imageView.setImageResource(R.drawable.engel);
+                    imageView.setImageResource(R.drawable.engel_edit);
                     item.setClickable(true);
                     break;
                 }
@@ -120,7 +120,7 @@ public class BadgeAdapter extends BaseAdapter {
         {
             if(userPath.size() < 10)
             {
-                imageView.setImageResource(R.drawable.engel);
+                imageView.setImageResource(R.drawable.engel_edit);
                 tv_badgeName.setVisibility(View.INVISIBLE);
                 item.setClickable(true);
             }
@@ -133,7 +133,7 @@ public class BadgeAdapter extends BaseAdapter {
         {
             if(categories.size() < 3)
             {
-                imageView.setImageResource(R.drawable.engel);
+                imageView.setImageResource(R.drawable.engel_edit);
                 tv_badgeName.setVisibility(View.INVISIBLE);
                 item.setClickable(true);
             }

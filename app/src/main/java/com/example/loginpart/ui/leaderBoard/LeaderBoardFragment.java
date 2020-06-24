@@ -39,7 +39,6 @@ public class LeaderBoardFragment extends Fragment {
     public static final String TAG = "TAG";
     public ArrayList<UserModel> userList = new ArrayList<>();
     public ListView listView;
-    private DocumentReference documentReferenceUser;
     private FirebaseFirestore firebaseFirestore;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -66,7 +65,7 @@ public class LeaderBoardFragment extends Fragment {
 
                                 String fullName = (String) user.get("fullName");
                                 int point = Integer.parseInt(user.get("point").toString());
-                                int reward;
+                                int reward; //An impression is made in the table for the reward
                                 if(index == 1)
                                 {
                                     reward = 500;
@@ -95,11 +94,8 @@ public class LeaderBoardFragment extends Fragment {
                     }
                 }
                 );
-
         return view;
-
     }
-
 }
 
 

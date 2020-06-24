@@ -26,8 +26,6 @@ public class CustomAdapter extends BaseAdapter {
         this.userList = userList;
     }
 
-
-
     @Override
     public int getCount() {
         return userList.size();
@@ -53,7 +51,6 @@ public class CustomAdapter extends BaseAdapter {
         TextView tv_reward = (TextView) item.findViewById(R.id.tv_reward);
 
         tv_fullName.setText(user.getFullName());
-        //String point = String.valueOf(user.getPoint());
         tv_point.setText(String.valueOf(user.getPoint()));
         tv_reward.setText(String.valueOf(user.getReward()));
 

@@ -76,6 +76,7 @@ public class HomeFragment extends Fragment {
 
     Object userPoint;
     Object userLevel;
+    public ArrayList<String> userPath = new ArrayList<>();
 
     private FirebaseDatabase firebaseDatabase;
     private FirebaseFirestore firebaseFirestore;
@@ -197,9 +198,6 @@ public class HomeFragment extends Fragment {
         });
         //-----------------------------------------------------------------------------------------
 
-
-
-
         //Main function of the homepage
         btnMove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,8 +235,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-
-
     final String[] artName = {""}; //??
     List<String> artPath = new ArrayList<String>(); //The path that holds artifacts' ids
 
@@ -269,10 +265,7 @@ public class HomeFragment extends Fragment {
                         documentReferenceUser.update("level", userLevel);
                         tv_level.setText(userLevel.toString());
                     }
-
                     Log.d("Document name", artName[0]);
-
-
                 } else {
                     Log.d("No document", "Document error");
                     //Toast.makeText(context,"No document",Toast.LENGTH_LONG);
@@ -300,7 +293,9 @@ public class HomeFragment extends Fragment {
                 playerButton.setY(y);
             }
         }
-
+        //Update the user's path to the database for the badge check
+        userPath.add(inputString);
+        documentReferenceUser.update("path", userPath);
     }
 
     private Point getPointOfView(View view) {
@@ -333,6 +328,7 @@ public class HomeFragment extends Fragment {
         final EditText answer = new EditText(context);
 
         QuestionModel question = new QuestionModel(0,"a");
+        //The question of that work is taken
         for(int i = 0;i < questionList.size();i++)
         {
             if(questionList.get(i).getArtifactID() == Integer.parseInt(inputString))
