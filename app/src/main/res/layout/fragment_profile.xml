@@ -75,36 +75,6 @@
         android:textStyle="bold"
         android:visibility="gone" />
 
-    <Button
-        android:id="@+id/ch_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="301dp"
-        android:layout_marginEnd="228dp"
-        android:layout_marginBottom="362dp"
-        android:text="@string/changeEmail" />
-
-    <Button
-        android:id="@+id/ch_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="215dp"
-        android:layout_marginTop="298dp"
-        android:layout_marginEnd="29dp"
-        android:layout_marginBottom="362dp"
-        android:text="@string/changePassword" />
-
-    <Button
-        android:id="@+id/btnLogoutProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="290dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="33dp"
-        android:layout_marginBottom="603dp"
-        android:text="@string/btnLogout" />
-
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
@@ -130,5 +100,29 @@
         android:textColorLink="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnLogoutProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="80dp"
+        android:text="LOGOUT" />
+
+    <Button
+        android:id="@+id/ch_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="300dp"
+        android:text="Change Email Adress" />
+
+    <Button
+        android:id="@+id/ch_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="220dp"
+        android:layout_marginTop="300dp"
+        android:text="Change Password" />
 
 </RelativeLayout>
