@@ -217,9 +217,6 @@ public class HomeFragment extends Fragment {
                         movementFunction(inputString);
                         quizFunction(inputString);
                         Log.d("empty", "this is an empty message");
-
-
-
                     }
                 });
 
@@ -291,6 +288,7 @@ public class HomeFragment extends Fragment {
                 artifactButtons.get(index - 1).setBackgroundColor(R.color.Green);
                 playerButton.setX(x);
                 playerButton.setY(y);
+                int a = 5;
             }
         }
         //Update the user's path to the database for the badge check
