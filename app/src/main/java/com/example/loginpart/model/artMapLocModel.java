@@ -3,9 +3,9 @@ package com.example.loginpart.model;
 public class artMapLocModel {
     private float coordinateX;
     private float coordinateY;
-    private float artifactID;
+    private int artifactID;
 
-    public artMapLocModel(float coordinateX, float coordinateY, float artifactID) {
+    public artMapLocModel(float coordinateX, float coordinateY, int artifactID) {
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.artifactID = artifactID;
@@ -19,9 +19,14 @@ public class artMapLocModel {
         return coordinateY;
     }
 
-    public float getArtifactID() {
+    public int getArtifactID() {
         return artifactID;
     }
+
+    public void setArtifactID(int artifactID) {
+        this.artifactID = artifactID;
+    }
+
 
 
 }

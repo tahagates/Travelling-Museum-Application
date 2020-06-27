@@ -22,8 +22,8 @@
     <string name="mailVerify">Email Not Verified !</string>
     <string name="btnVerify">Verify Now</string>
     <string name="forgotPassword">Forgot your password? Click here.</string>
-    <string name="changeEmail">Change your email address</string>
-    <string name="changePassword">Change your password</string>
+    <string name="changeEmail">Change email address</string>
+    <string name="changePassword">Change password</string>
     <string name="appLogo"/>
     <string name="enterYourEmail">Please enter your email address</string>
     <string name="sendPass">Reset my password</string>
@@ -38,11 +38,12 @@
     <string name="collection7">C7</string>
     <string name="collection8">C8</string>
     <string name="collection9">C9</string>
+    <string name="collection10">C10</string>
     <string name="collection11">C11</string>
-    <string name="collection12">C12</string>
     <string name="playerButton">P</string>
     <string name="artifactButton">MOVE!</string>
     <string name="blankText"/>
+    <string name="badgeHeader">BADGES</string>
 
 
     <string-array name="jobs">

@@ -136,8 +136,7 @@ public class HomeFragment extends Fragment {
         databaseReference = firebaseDatabase.getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        //Coordinate functions call
-        //Log.d("1x and y",artifact1.getX() + " "+ artifact1.getY());
+        //Device compatibility
         fillLocation(artifactButtons);
         updateCoordinates();
 
@@ -216,7 +215,6 @@ public class HomeFragment extends Fragment {
                         pointFunction(inputString);
                         movementFunction(inputString);
                         quizFunction(inputString);
-                        Log.d("empty", "this is an empty message");
                     }
                 });
 
@@ -232,14 +230,11 @@ public class HomeFragment extends Fragment {
 
     }
 
-    final String[] artName = {""}; //??
-    List<String> artPath = new ArrayList<String>(); //The path that holds artifacts' ids
+    final String[] artName = {""}; //Artifact name for log document
 
     private void pointFunction(final String inputString) {
         final Object[] artifactPoint = new Object[1];
 
-        //final String artString = findArt(inputString);
-        //artPath.add(inputString);
         documentReference = firebaseFirestore.collection("artifacts").document(inputString);
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -284,42 +279,19 @@ public class HomeFragment extends Fragment {
             if (index == currentID){
                 int x = (int)artifactLocations.get(i).getCoordinateX();
                 int y = (int)artifactLocations.get(i).getCoordinateY();
-//                int id = (int)artifactLocations.get(i).getArtifactID();
                 artifactButtons.get(index - 1).setBackgroundColor(R.color.Green);
                 playerButton.setX(x);
                 playerButton.setY(y);
-                int a = 5;
+                //Update the user's path to the database for the badge check
+                userPath.add(inputString);
+                documentReferenceUser.update("path", userPath);
+                break;
             }
         }
-        //Update the user's path to the database for the badge check
-        userPath.add(inputString);
-        documentReferenceUser.update("path", userPath);
+
+
     }
 
-    private Point getPointOfView(View view) {
-        int[] location = new int[2];
-        view.getLocationInWindow(location);
-        return new Point(location[0], location[1]);
-    }
-
-
-    private void updateCoordinates(){
-        Map<Float,Object> data = new HashMap<>();
-        for(float i = 0; i < artifactLocations.size(); i++){
-            Task<Void> collectionReference = firebaseFirestore.collection("mapLocations")
-                    .document(Integer.toString(Math.round(i)))
-                    .update(
-                            "X", artifactLocations.get((int)i).getCoordinateX(),
-                            "Y",artifactLocations.get((int)i).getCoordinateY()
-                    ).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            //Task successful
-                        }
-                    });
-        }
-
-    }
 
     private void quizFunction(final String inputString) {
 
@@ -373,6 +345,24 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void updateCoordinates(){
+        Map<Float,Object> data = new HashMap<>();
+        for(float i = 0; i < artifactLocations.size(); i++){
+            Task<Void> collectionReference = firebaseFirestore.collection("mapLocations")
+                    .document(Integer.toString(Math.round(i)))
+                    .update(
+                            "X", artifactLocations.get((int)i).getCoordinateX(),
+                            "Y",artifactLocations.get((int)i).getCoordinateY()
+                    ).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            //Task successful
+                        }
+                    });
+        }
+
+    }
+    
     private void fillLocation(List<Button> buttons){
        for(int i = 0; i < buttons.size(); i++){
            final Button temp2 = buttons.get(i);
