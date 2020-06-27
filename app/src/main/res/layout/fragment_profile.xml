@@ -77,8 +77,8 @@
 
     <Button
         android:id="@+id/ch_email"
-        android:layout_width="167dp"
-        android:layout_height="68dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="301dp"
         android:layout_marginEnd="228dp"
@@ -87,8 +87,8 @@
 
     <Button
         android:id="@+id/ch_password"
-        android:layout_width="167dp"
-        android:layout_height="71dp"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginStart="215dp"
         android:layout_marginTop="298dp"
         android:layout_marginEnd="29dp"
@@ -97,7 +97,7 @@
 
     <Button
         android:id="@+id/btnLogoutProfile"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="290dp"
         android:layout_marginTop="80dp"
